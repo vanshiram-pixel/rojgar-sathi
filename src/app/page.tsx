@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search, BriefcaseBusiness, GraduationCap, FileCheck2, Trophy, ArrowUpRight, ShieldCheck, BellRing, ClipboardList, BookOpenCheck } from "lucide-react";
+import { Search, BriefcaseBusiness, GraduationCap, Trophy, ArrowUpRight, ShieldCheck, BellRing, ClipboardList, BookOpenCheck } from "lucide-react";
 import { getPublishedJobs, getSettings } from "@/lib/data";
 import { JobCard } from "@/components/JobCard";
 import { AdSlot } from "@/components/AdSlot";
@@ -19,7 +19,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
   return <>
     <div className="topbar"><div className="wrap topbar-inner"><span>रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी</span><span><ShieldCheck size={13} /> आधिकारिक स्रोतों से पुष्टि करें</span></div></div>
     <header className="header"><div className="wrap header-inner">
-      <Link className="brand" href="/">{settings.logo_url ? <img src={settings.logo_url} alt={settings.brand_name} style={{ width: 42, height: 42, objectFit: "contain" }} /> : <span className="brand-mark">RS</span>}<span>{settings.brand_name}<small className="brand-tagline">{settings.tagline}</small></span></Link>
+      <Link className="brand" href="/"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi logo" /><span className="brand-tagline">{settings.tagline}</span></Link>
       <nav className="nav">{nav.map((n, i) => <Link key={i} href={n.href}>{n.label}</Link>)}<Link href="/admin/login">Admin</Link></nav>
       <Link className="mobile-menu text-link" href="/jobs">नौकरियाँ →</Link>
     </div></header>
@@ -42,9 +42,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         {sections.map(section => <div className="portal-box" key={section.title}><h3>{section.title}</h3><ul>{section.items.map(([label, href]) => <li key={label}><Link href={href}>{label}<ArrowUpRight size={13}/></Link></li>)}</ul></div>)}
       </div></div></section>
       <section className="section portal-section"><div className="wrap"><div className="section-head"><div><h2>लोकप्रिय श्रेणियाँ</h2><div className="sub">नौकरी और परीक्षा से जुड़े सीधे लिंक।</div></div></div><div className="category-grid">
-        {[[ "💼", "सरकारी नौकरी", "/jobs" ], [ "🎫", "एडमिट कार्ड", "/category/admit-card" ], [ "🏆", "रिजल्ट", "/category/result" ], [ "🎓", "छात्रवृत्ति", "/category/scholarship" ]].map(([icon, label, href]) => <Link className="category" href={href} key={href}><span>{icon}</span>{label}<ArrowUpRight size={15}/></Link>)}
+        {[["💼", "सरकारी नौकरी", "/jobs"], ["🎫", "एडमिट कार्ड", "/category/admit-card"], ["🏆", "रिजल्ट", "/category/result"], ["🎓", "छात्रवृत्ति", "/category/scholarship"]].map(([icon, label, href]) => <Link className="category" href={href} key={href}><span>{icon}</span>{label}<ArrowUpRight size={15}/></Link>)}
       </div></div></section>
     </main>
-    <footer className="footer"><div className="wrap footer-inner"><div><div className="brand footer-brand"><span className="brand-mark">RS</span>{settings.brand_name}</div><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/privacy">गोपनीयता नीति</Link><Link href="/disclaimer">अस्वीकरण</Link><small>किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।</small></div></div></footer>
+    <footer className="footer"><div className="wrap footer-inner"><div><img className="brand-logo footer-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/privacy">गोपनीयता नीति</Link><Link href="/disclaimer">अस्वीकरण</Link><small>किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।</small></div></div></footer>
   </>;
 }
