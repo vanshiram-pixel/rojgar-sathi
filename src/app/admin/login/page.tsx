@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
@@ -30,7 +30,7 @@ export default function Login() {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
+
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,7 +57,7 @@ export default function Login() {
       }
 
       setNotice("एडमिन लॉगिन सफल। डैशबोर्ड खोला जा रहा है…");
-      const next = searchParams.get("next");
+      const next = new URLSearchParams(window.location.search).get("next");
       const safeNext = next && next.startsWith("/admin/") && !next.startsWith("//") && next !== "/admin/login" ? next : "/admin";
       router.replace(safeNext);
       router.refresh();
@@ -74,7 +74,7 @@ export default function Login() {
         <Link className="brand" href="/"><span className="brand-mark">UR</span>Updated Rojgar</Link>
         <h1>Admin Login</h1>
         <p className="sub">वेबसाइट और ऐप की सेटिंग प्रबंधित करें।</p>
-        {searchParams.get("error") === "admin-access-required" && <div className="notice error" role="alert">इस खाते को एडमिन अनुमति नहीं है।</div>}
+        {new URLSearchParams(window.location.search).get("error") === "admin-access-required" && <div className="notice error" role="alert">इस खाते को एडमिन अनुमति नहीं है।</div>}
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
         {notice && <div className="notice" role="status" aria-live="polite">{notice}</div>}
         <label className="field">ईमेल
