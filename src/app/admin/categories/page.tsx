@@ -17,7 +17,10 @@ type Category = {
 
 const blank = { name: "", slug: "", category_type: "content", description: "", parent_slug: "", sort_order: 100, is_active: true };
 const types = [
-  ["content", "सामान्य श्रेणी"], ["state", "राज्य / केंद्रशासित प्रदेश"], ["exam", "परीक्षा"], ["education", "शिक्षा / छात्रवृत्ति"], ["scheme", "सरकारी योजना"], ["employment", "रोजगार / अप्रेंटिसशिप"]
+  ["content", "सामान्य / साझा सूची"], ["state", "राज्य / केंद्रशासित प्रदेश"],
+  ["department", "विभाग / भर्ती बोर्ड"], ["qualification", "योग्यता"],
+  ["exam", "परीक्षा"], ["education", "शिक्षा / छात्रवृत्ति"],
+  ["scheme", "सरकारी योजना"], ["employment", "रोजगार / अप्रेंटिसशिप"]
 ];
 
 function slugify(value: string) {
