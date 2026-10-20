@@ -84,7 +84,7 @@ export default async function JobDetail({ params }: PageProps) {
     ["परीक्षा तिथि", job.exam_date ? displayDate(job.exam_date) : ""],
     ["चयन प्रक्रिया", job.selection_process || ""],
     ["कार्य स्थान", job.location || ""],
-  ].filter(([, value]) => value.trim().length > 0);
+  ].filter((entry): entry is [string, string] => entry[1].trim().length > 0);
 
   return (
     <>
