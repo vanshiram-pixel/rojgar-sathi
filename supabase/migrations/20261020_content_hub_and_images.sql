@@ -86,3 +86,66 @@ create policy "admins update content images" on storage.objects
 drop policy if exists "admins delete content images" on storage.objects;
 create policy "admins delete content images" on storage.objects
   for delete to authenticated using (bucket_id = 'content-images' and public.is_site_admin());
+
+-- Verified active scholarship notices checked on 2026-10-20 against the National Scholarship Portal.
+-- These are live notices, not sample/demo records. Re-check the official portal before reposting after the deadline.
+insert into public.content_items
+  (title, slug, content_type, government_level, state_name, department, summary, body, eligibility, benefits,
+   required_documents, application_start, application_end, official_url, notification_url, category_slugs,
+   status, featured, last_verified_at)
+values
+  (
+    'PM-USP CSSS Scholarship 2026-27 — Renewal Applications',
+    'pm-usp-csss-renewal-2026-27',
+    'scholarship', 'central', '', 'Ministry of Education',
+    'राष्ट्रीय छात्रवृत्ति पोर्टल पर PM-USP Central Sector Scheme of Scholarship for College and University Students की renewal application 31 अक्टूबर 2026 तक खुली बताई गई है।',
+    'राष्ट्रीय छात्रवृत्ति पोर्टल के Academic Year 2026-27 announcements के अनुसार renewal आवेदन की अंतिम तिथि 31-10-2026 है। Institute verification की अंतिम तिथि 15-11-2026 और L2 verification की अंतिम तिथि 30-11-2026 बताई गई है। यह पोस्ट केवल renewal आवेदन के लिए है; fresh application की स्थिति और पात्रता आधिकारिक पोर्टल पर जाँचें।',
+    'यह renewal आवेदन उन विद्यार्थियों के लिए है जो संबंधित योजना की मौजूदा पात्रता और renewal शर्तें पूरी करते हैं। पात्रता, शैक्षणिक प्रदर्शन, दस्तावेज़ और अन्य शर्तें आधिकारिक योजना निर्देशों से सत्यापित करें।',
+    'योजना के अनुसार पात्र विद्यार्थियों को छात्रवृत्ति सहायता; राशि और पात्रता आधिकारिक निर्देशों के अधीन।',
+    'पिछले आवेदन/OTR विवरण, शैक्षणिक प्रमाण, बैंक और अन्य दस्तावेज़ जो आधिकारिक आवेदन पोर्टल माँगे।',
+    '2026-06-01', '2026-10-31',
+    'https://scholarships.gov.in/Students', 'https://scholarships.gov.in/',
+    array['scholarship','university-updates'], 'published', true, '2026-10-20T00:00:00Z'
+  ),
+  (
+    'PM-USP Special Scholarship Scheme for J&K and Ladakh — Renewal 2026-27',
+    'pm-usp-special-scholarship-jk-ladakh-renewal-2026-27',
+    'scholarship', 'central', 'Jammu and Kashmir', 'Ministry of Education',
+    'National Scholarship Portal के अनुसार PM-USP Special Scholarship Scheme for Jammu Kashmir and Ladakh की renewal application की अंतिम तिथि 31 अक्टूबर 2026 है।',
+    'National Scholarship Portal के Academic Year 2026-27 announcement में renewal application 31-10-2026 तक खुली बताई गई है। Institute verification की अंतिम तिथि 15-11-2026 और L2 verification की अंतिम तिथि 30-11-2026 है। Fresh application, पात्रता और लागू क्षेत्र की स्थिति आधिकारिक पोर्टल पर जाँचें।',
+    'जम्मू-कश्मीर और लद्दाख के पात्र विद्यार्थियों के लिए योजना-विशिष्ट renewal शर्तें लागू होंगी। अंतिम पात्रता और दस्तावेज़ आधिकारिक दिशा-निर्देश से जाँचें।',
+    'योजना के नियमों के अनुसार छात्रवृत्ति सहायता; लाभ और राशि आधिकारिक योजना दिशानिर्देशों के अधीन।',
+    'OTR, पिछली आवेदन जानकारी, शैक्षणिक प्रमाण और पोर्टल द्वारा माँगे गए दस्तावेज़।',
+    '2026-06-01', '2026-10-31',
+    'https://scholarships.gov.in/Students', 'https://scholarships.gov.in/All-Scholarships',
+    array['scholarship','jammu-and-kashmir'], 'published', true, '2026-10-20T00:00:00Z'
+  ),
+  (
+    'PM Scholarship Scheme for Wards of Martyred Police Personnel — 2026-27',
+    'pm-scholarship-martyred-police-personnel-2026-27',
+    'scholarship', 'central', '', 'Ministry of Home Affairs',
+    'National Scholarship Portal पर इस merit-based scholarship के लिए आवेदन 31 अक्टूबर 2026 तक खुला दिखाया गया है।',
+    'National Scholarship Portal की 2026-27 scholarship listing के अनुसार scheme open date 01-06-2026 और student application deadline 31-10-2026 है। Defective application और institute verification की deadline 15-11-2026 तथा DNO/SNO/MNO verification की deadline 30-11-2026 दिखाई गई है। पात्रता और आवश्यक सेवा/शहादत प्रमाणपत्र आधिकारिक scheme guidelines से जाँचें।',
+    'राज्य/केंद्रशासित प्रदेश पुलिस कर्मियों के उन पात्र आश्रितों के लिए जिनकी मृत्यु आतंकवादी/नक्सली हमले में हुई हो; विस्तृत पात्रता और अपवाद आधिकारिक दिशा-निर्देशों के अनुसार।',
+    'छात्रवृत्ति सहायता योजना-निर्देशों के अनुसार; राशि और नवीनीकरण नियम आधिकारिक पोर्टल पर जाँचें।',
+    'पात्रता प्रमाणपत्र, शैक्षणिक रिकॉर्ड, बैंक विवरण और पोर्टल द्वारा माँगे गए अन्य दस्तावेज़।',
+    '2026-06-01', '2026-10-31',
+    'https://scholarships.gov.in/All-Scholarships', 'https://scholarships.gov.in/',
+    array['scholarship'], 'published', true, '2026-10-20T00:00:00Z'
+  )
+on conflict (slug) do update set
+  title=excluded.title,
+  summary=excluded.summary,
+  body=excluded.body,
+  eligibility=excluded.eligibility,
+  benefits=excluded.benefits,
+  required_documents=excluded.required_documents,
+  application_start=excluded.application_start,
+  application_end=excluded.application_end,
+  official_url=excluded.official_url,
+  notification_url=excluded.notification_url,
+  category_slugs=excluded.category_slugs,
+  status=excluded.status,
+  featured=excluded.featured,
+  last_verified_at=excluded.last_verified_at,
+  updated_at=now();
