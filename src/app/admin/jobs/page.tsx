@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 
 const blank: any = {
   title: "", organization: "", category: "सरकारी नौकरी", category_slugs: [],
-  department: "", recruitment_type: "सरकारी नौकरी", location: "भारत", vacancies: "",
+  department: "", department_slug: "", state_slug: "", primary_category_slug: "", recruitment_type: "सरकारी नौकरी", location: "भारत", vacancies: "",
   qualification: "", age_limit: "", application_fee: "", salary: "", selection_process: "",
   application_start: "", application_end: "", exam_date: "", valid_through: "",
   official_source: "", last_verified_at: null, official_url: "", notification_url: "",
@@ -173,11 +173,26 @@ function JobsAdmin() {
           {input("भर्ती का नाम *", "title", "text", true)}
           {input("विभाग / संस्था / भर्ती बोर्ड", "organization")}
           <label className="field">
-            भर्ती विभाग
-            <select value={form.department || ""} onChange={(e) => set("department", e.target.value)}>
+            भर्ती विभाग / बोर्ड
+            <select value={form.department_slug || ""} onChange={(e) => {
+              const item = allCategoryOptions.find((x) => x.slug === e.target.value);
+              setForm((prev: any) => ({ ...prev, department_slug: e.target.value, department: item?.name || "" }));
+            }}>
               <option value="">विभाग चुनें</option>
               {allCategoryOptions.filter((x) => x.category_type === "department").map((x) =>
-                <option key={x.slug} value={x.name}>{x.name}</option>
+                <option key={x.slug} value={x.slug}>{x.name}</option>
+              )}
+            </select>
+          </label>
+          <label className="field">
+            राज्य / केंद्रशासित प्रदेश
+            <select value={form.state_slug || ""} onChange={(e) => {
+              const item = allCategoryOptions.find((x) => x.slug === e.target.value);
+              setForm((prev: any) => ({ ...prev, state_slug: e.target.value, location: item?.name || (prev.location === "भारत" ? "भारत" : prev.location) }));
+            }}>
+              <option value="">केंद्र / अखिल भारतीय / लागू नहीं</option>
+              {allCategoryOptions.filter((x) => x.category_type === "state").map((x) =>
+                <option key={x.slug} value={x.slug}>{x.name}</option>
               )}
             </select>
           </label>
@@ -195,6 +210,13 @@ function JobsAdmin() {
               {["सरकारी नौकरी", "एडमिट कार्ड", "रिजल्ट", "आंसर की", "स्कॉलरशिप", "प्रवेश", "सरकारी योजना", ...allCategoryOptions.map((x) => x.name)]
                 .filter((x, i, arr) => arr.indexOf(x) === i)
                 .map((x) => <option key={x} value={x}>{x}</option>)}
+            </select>
+          </label>
+          <label className="field">
+            मुख्य नेविगेशन श्रेणी
+            <select value={form.primary_category_slug || ""} onChange={(e) => set("primary_category_slug", e.target.value)}>
+              <option value="">मुख्य श्रेणी चुनें</option>
+              {allCategoryOptions.map((x) => <option key={x.slug} value={x.slug}>{x.name}</option>)}
             </select>
           </label>
           {input("राज्य / स्थान", "location")}
