@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Updated Rojgar",
-    short_name: "Updated Rojgar",
-    description: "सरकारी नौकरी और करियर अपडेट",
+    name: "Rojgar Sathi",
+    short_name: "Rojgar Sathi",
+    description: "सरकारी नौकरी, प्रवेश-पत्र, परिणाम और छात्रवृत्ति अपडेट",
     start_url: "/",
     display: "standalone",
     background_color: "#f5f7fb",
