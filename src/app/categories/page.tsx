@@ -12,6 +12,8 @@ const groups: { type: string; title: string; description: string }[] = [
   { type: "scheme", title: "सरकारी योजनाएँ", description: "केंद्र और राज्य सरकार की योजनाओं की जानकारी" },
   { type: "employment", title: "रोजगार और कौशल", description: "अप्रेंटिसशिप, निजी नौकरियाँ, इंटर्नशिप और कौशल" },
   { type: "exam", title: "परीक्षा श्रेणियाँ", description: "परीक्षा-विशेष जानकारी" },
+  { type: "department", title: "विभाग के अनुसार भर्ती", description: "रक्षा, पुलिस, रेलवे, शिक्षक, बैंकिंग, स्वास्थ्य, PSU और अन्य विभाग" },
+  { type: "qualification", title: "योग्यता के अनुसार भर्ती", description: "8वीं, 10वीं, 12वीं, ITI, डिप्लोमा, ग्रेजुएशन और उच्च योग्यता" },
 ];
 
 export default async function CategoriesPage() {
