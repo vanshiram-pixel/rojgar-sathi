@@ -101,7 +101,7 @@ export default async function Category({ params }: { params: Promise<{ slug: str
   };
   let contentItems: any[] = [];
   try {
-    const queries: Promise<any>[] = [];
+    const queries: any[] = [];
     const contentType = contentTypeBySlug[slug];
     if (contentType) {
       queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("content_type", contentType).order("created_at", { ascending: false }).limit(100));
