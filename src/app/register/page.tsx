@@ -27,7 +27,29 @@ export default function Register() {
   const [resending, setResending] = useState(false);
   const router = useRouter();
 
-  async function googleRegister() {\n    if (busy) return;\n    setBusy(true); setError(""); setMsg("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", queryParams: { access_type: "offline", prompt: "select_account" } } });\n      if (error) throw error;\n    } catch (err) { setError(friendlyRegisterError(err)); setBusy(false); }\n  }\n\n  async function resendVerification() {\n    if (!pendingEmail || resending) return;\n    setResending(true); setError(""); setMsg("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" } });\n      if (error) throw error;\n      setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");\n    } catch (err) { setError(friendlyRegisterError(err)); }\n    finally { setResending(false); }\n  }\n\n  async function resendVerification() {
+  async function googleRegister() {
+    if (busy) return;
+    setBusy(true); setError(""); setMsg("");
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", queryParams: { access_type: "offline", prompt: "select_account" } } });
+      if (error) throw error;
+    } catch (err) { setError(friendlyRegisterError(err)); setBusy(false); }
+  }
+
+  async function resendVerification() {
+    if (!pendingEmail || resending) return;
+    setResending(true); setError(""); setMsg("");
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" } });
+      if (error) throw error;
+      setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");
+    } catch (err) { setError(friendlyRegisterError(err)); }
+    finally { setResending(false); }
+  }
+
+  async function resendVerification() {
     if (!pendingEmail || resending) return;
     setResending(true);
     setError("");
@@ -99,7 +121,9 @@ export default function Register() {
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
         {msg && <div className="notice" role="status" aria-live="polite">{msg}</div>}
         {pendingEmail && msg && <button type="button" className="btn" onClick={resendVerification} disabled={resending}>{resending ? "लिंक भेजी जा रही है…" : "सत्यापन ईमेल दोबारा भेजें"}</button>}
-        <button type="button" className="btn" onClick={googleRegister} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से रजिस्टर / लॉगिन करें"}</button>\n        <div className="sub" style={{textAlign:"center",margin:"12px 0"}}>या ईमेल और पासवर्ड से अकाउंट बनाएँ</div>\n        <label className="field">पूरा नाम
+        <button type="button" className="btn" onClick={googleRegister} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से रजिस्टर / लॉगिन करें"}</button>
+        <div className="sub" style={{textAlign:"center",margin:"12px 0"}}>या ईमेल और पासवर्ड से अकाउंट बनाएँ</div>
+        <label className="field">पूरा नाम
           <input value={name} onChange={e => setName(e.target.value)} required autoComplete="name" />
         </label>
         <label className="field">ईमेल
