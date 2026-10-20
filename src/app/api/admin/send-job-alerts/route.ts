@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 function matches(profile: any, job: any) {
@@ -47,15 +48,18 @@ export async function POST(request: Request) {
     if (!jobId) return NextResponse.json({ error: "jobId जरूरी है।" }, { status: 400 });
     const { data: job, error: jobError } = await supabase.from("jobs").select("*").eq("id", jobId).eq("status", "published").maybeSingle();
     if (jobError || !job) return NextResponse.json({ error: "प्रकाशित भर्ती नहीं मिली।" }, { status: 404 });
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!serviceKey) return NextResponse.json({ error: "यूज़र डेटा पढ़ने के लिए SUPABASE_SERVICE_ROLE_KEY सेट करें।" }, { status: 503 });
+    const adminDb = createSupabaseAdmin(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
     const apiKey = process.env.RESEND_API_KEY;
     const from = process.env.RESEND_FROM_EMAIL;
     if (!apiKey || !from) return NextResponse.json({ error: "ईमेल सेवा सेट नहीं है। Vercel में RESEND_API_KEY और RESEND_FROM_EMAIL जोड़ें।" }, { status: 503 });
-    const { data: profiles, error: profileError } = await supabase.from("user_profiles").select("user_id,email,full_name,state,qualification,categories,alert_frequency,email_alerts").eq("email_alerts", true);
+    const { data: profiles, error: profileError } = await adminDb.from("user_profiles").select("user_id,email,full_name,state,qualification,categories,alert_frequency,email_alerts").eq("email_alerts", true);
     if (profileError) return NextResponse.json({ error: "यूज़र की पसंद पढ़ने में त्रुटि: " + profileError.message }, { status: 500 });
     const recipients = (profiles || []).filter((p: any) => p.email && matches(p, job));
     let sent = 0, failed = 0, skipped = 0;
     for (const p of recipients) {
-      const { data: existing } = await supabase.from("user_alert_log").select("id").eq("user_id", p.user_id).eq("job_id", job.id).eq("channel", "email").maybeSingle();
+      const { data: existing } = await adminDb.from("user_alert_log").select("id").eq("user_id", p.user_id).eq("job_id", job.id).eq("channel", "email").maybeSingle();
       if (existing) { skipped++; continue; }
       const safeTitle = String(job.title).replace(/[<>]/g, "");
       const safeOrg = String(job.organization || "").replace(/[<>]/g, "");
@@ -66,7 +70,7 @@ export async function POST(request: Request) {
       try {
         const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: "Bearer " + apiKey, "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         if (!response.ok) { failed++; continue; }
-        const { error: logError } = await supabase.from("user_alert_log").insert({ user_id: p.user_id, job_id: job.id, channel: "email" });
+        const { error: logError } = await adminDb.from("user_alert_log").insert({ user_id: p.user_id, job_id: job.id, channel: "email" });
         if (logError) failed++; else sent++;
       } catch { failed++; }
     }
