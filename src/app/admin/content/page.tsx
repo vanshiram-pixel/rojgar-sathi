@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 
 const blank: any = {
   title: "", slug: "", content_type: "scheme", government_level: "central", state_name: "",
-  department: "", summary: "", body: "", eligibility: "", benefits: "", required_documents: "",
+  department: "", department_slug: "", state_slug: "", primary_category_slug: "", summary: "", body: "", eligibility: "", benefits: "", required_documents: "",
   application_start: "", application_end: "", official_url: "", notification_url: "",
   image_url: "", category_slugs: [], status: "draft", featured: false
 };
@@ -127,6 +127,9 @@ function ContentManager() {
         title: String(form.title || "").trim(),
         slug,
         category_slugs: Array.isArray(form.category_slugs) ? [...new Set(form.category_slugs)] : [],
+        state_slug: form.state_slug || "",
+        department_slug: form.department_slug || "",
+        primary_category_slug: form.primary_category_slug || "",
         application_start: form.application_start || null,
         application_end: form.application_end || null,
         last_verified_at: new Date().toISOString(),
@@ -183,8 +186,11 @@ function ContentManager() {
           </label>
           {form.government_level === "state" || form.government_level === "district" ? (
             <label className="field">राज्य / क्षेत्र
-              <select value={form.state_name || ""} onChange={(e) => set("state_name", e.target.value)}>
-                <option value="">राज्य चुनें</option>{states.map((item) => <option value={item.name} key={item.slug}>{item.name}</option>)}
+              <select value={form.state_slug || ""} onChange={(e) => {
+                const item = states.find((x: any) => x.slug === e.target.value);
+                setForm((prev: any) => ({ ...prev, state_slug: e.target.value, state_name: item?.name || "" }));
+              }}>
+                <option value="">राज्य / क्षेत्र चुनें</option>{states.map((item) => <option value={item.slug} key={item.slug}>{item.name}</option>)}
               </select>
             </label>
           ) : null}
@@ -197,8 +203,15 @@ function ContentManager() {
           <label className="field">URL slug
             <input required pattern="[a-z0-9]+(-[a-z0-9]+)*" value={form.slug} onChange={(e) => set("slug", e.target.value)} />
           </label>
-          <label className="field">विभाग / संस्था का नाम
-            <input value={form.department} onChange={(e) => set("department", e.target.value)} />
+          <label className="field">विभाग / संस्था (मानक सूची)
+            <select value={form.department_slug || ""} onChange={(e) => {
+              const item = categories.find((x: any) => x.slug === e.target.value);
+              setForm((prev: any) => ({ ...prev, department_slug: e.target.value, department: item?.name || prev.department }));
+            }}>
+              <option value="">विभाग चुनें (यदि लागू हो)</option>
+              {categories.filter((item: any) => item.category_type === "department").map((item: any) => <option value={item.slug} key={item.slug}>{item.name}</option>)}
+            </select>
+            <input value={form.department || ""} onChange={(e) => set("department", e.target.value)} placeholder="वैकल्पिक: संस्था / बोर्ड का सटीक नाम" />
           </label>
           <label className="field">आवेदन शुरू
             <input type="date" value={form.application_start || ""} onChange={(e) => set("application_start", e.target.value)} />
@@ -238,7 +251,13 @@ function ContentManager() {
           {form.image_url ? <img src={form.image_url} alt="पोस्ट पूर्वावलोकन" style={{ maxWidth: 260, maxHeight: 160, objectFit: "contain", borderRadius: 10 }} /> : null}
         </div>
 
-        <section className="field full">
+        <label className="field">मुख्य श्रेणी
+            <select value={form.primary_category_slug || ""} onChange={(e) => set("primary_category_slug", e.target.value)}>
+              <option value="">मुख्य श्रेणी चुनें</option>
+              {categories.map((item: any) => <option value={item.slug} key={item.slug}>{item.name}</option>)}
+            </select>
+          </label>
+          <section className="field full">
           <strong>संबंधित श्रेणियाँ चुनें</strong>
           <p className="sub">एक पोस्ट कई जगह दिख सकती है।</p>
           <input value={categorySearch} onChange={(e) => setCategorySearch(e.target.value)} placeholder="श्रेणी खोजें…" />
