@@ -23,6 +23,8 @@ export default function Register() {
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState("");
+  const [resending, setResending] = useState(false);
   const router = useRouter();
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -38,7 +40,7 @@ export default function Register() {
         password,
         options: {
           data: { full_name: name.trim() },
-          emailRedirectTo: window.location.origin + "/profile",
+          emailRedirectTo: window.location.origin + "/auth/callback?next=/",
         },
       });
       if (signUpError) throw signUpError;
@@ -58,7 +60,8 @@ export default function Register() {
         return;
       }
 
-      setMsg("रजिस्ट्रेशन अनुरोध प्राप्त हुआ। यदि इस ईमेल पर सत्यापन संदेश आता है, तो उसमें दिए लिंक से ईमेल सत्यापित करें; उसके बाद लॉगिन करें। यदि अकाउंट पहले से है, तो लॉगिन पेज खोलें।");
+      setPendingEmail(email.trim());
+      setMsg("रजिस्ट्रेशन अनुरोध स्वीकार हुआ। अपना ईमेल इनबॉक्स और Spam/Junk फ़ोल्डर खोलें। Rojgar Sathi की सत्यापन लिंक पर क्लिक करना ज़रूरी है। सत्यापन पूरा होने पर वेबसाइट का होम पेज खुलेगा; फिर लॉगिन करके प्रोफाइल/डैशबोर्ड देख सकते हैं।")
     } catch (err) {
       setError(friendlyRegisterError(err));
     } finally {
@@ -73,7 +76,7 @@ export default function Register() {
         <h1>यूज़र अकाउंट बनाएँ</h1>
         <p className="sub">अपनी पसंद की भर्ती और अपडेट पाने के लिए पंजीकरण करें।</p>
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
-        {msg && <div className="notice" role="status" aria-live="polite">{msg}</div>}
+        {msg && <div className="notice" role="status" aria-live="polite">{msg}</div>}\n        {pendingEmail && msg && <button type="button" className="btn" onClick={resendVerification} disabled={resending}>{resending ? "लिंक भेजी जा रही है…" : "सत्यापन ईमेल दोबारा भेजें"}</button>}
         <label className="field">पूरा नाम
           <input value={name} onChange={e => setName(e.target.value)} required autoComplete="name" />
         </label>
