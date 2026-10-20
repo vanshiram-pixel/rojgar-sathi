@@ -149,3 +149,59 @@ on conflict (slug) do update set
   featured=excluded.featured,
   last_verified_at=excluded.last_verified_at,
   updated_at=now();
+
+-- Official scheme discovery sources and a Rajasthan portal update, checked on 2026-10-20.
+insert into public.content_items
+  (title, slug, content_type, government_level, state_name, department, summary, body, eligibility, benefits,
+   required_documents, official_url, notification_url, category_slugs, status, featured, last_verified_at)
+values
+  (
+    'केंद्र और राज्य सरकार की योजनाएँ खोजें — myScheme',
+    'official-government-scheme-finder-myscheme',
+    'scheme', 'central', '', 'National e-Governance Division, MeitY',
+    'myScheme पर केंद्र और राज्य/केंद्रशासित प्रदेशों की योजनाएँ पात्रता और लाभार्थी श्रेणी के अनुसार खोजी जा सकती हैं।',
+    'यह भारत सरकार का आधिकारिक scheme discovery portal है। योजना के विवरण में पात्रता, लाभ और आवेदन प्रक्रिया देखें; आवेदन से पहले संबंधित विभाग की मूल सूचना भी जाँचें। यह एक आधिकारिक खोज-पोर्टल है, किसी एक योजना का आवेदन फॉर्म नहीं।',
+    'योजना के अनुसार अलग-अलग पात्रता लागू होती है।',
+    'उपयुक्त सरकारी योजनाओं की खोज और आधिकारिक आवेदन लिंक तक पहुँच।',
+    'चुनी गई योजना के आधिकारिक निर्देशों में बताए गए दस्तावेज़।',
+    'https://www.myscheme.gov.in/', 'https://www.myscheme.gov.in/find-scheme',
+    array['government-schemes'], 'published', true, '2026-10-20T00:00:00Z'
+  ),
+  (
+    'राजस्थान की सरकारी योजनाएँ — जन सूचना पोर्टल',
+    'rajasthan-official-scheme-directory-jansoochna',
+    'scheme', 'state', 'Rajasthan', 'Government of Rajasthan',
+    'राजस्थान जन सूचना पोर्टल पर राज्य की योजनाओं, विभागों और लाभार्थी सेवाओं की जानकारी उपलब्ध है।',
+    'राजस्थान जन सूचना पोर्टल पर योजना, विभाग और सेवा के अनुसार जानकारी खोजें। पात्रता, लाभार्थी स्थिति, आवेदन प्रक्रिया और दस्तावेज़ संबंधित विभाग की मौजूदा सूचना से सत्यापित करें।',
+    'योजना के अनुसार अलग-अलग पात्रता लागू होती है।',
+    'राजस्थान सरकार की योजनाओं और नागरिक सेवाओं की आधिकारिक जानकारी तक पहुँच।',
+    'चुनी गई योजना के आधिकारिक निर्देशों में बताए गए दस्तावेज़।',
+    'https://jansoochna.rajasthan.gov.in/Scheme/Index', 'https://jansoochna.rajasthan.gov.in/',
+    array['government-schemes','rajasthan'], 'published', true, '2026-10-20T00:00:00Z'
+  ),
+  (
+    'राजस्थान छात्रवृत्ति पोर्टल 2026-27 — आधिकारिक सूचनाएँ',
+    'rajasthan-scholarship-portal-notices-2026-27',
+    'scholarship', 'state', 'Rajasthan', 'Higher Education / Social Justice and Empowerment Department',
+    'राजस्थान के आधिकारिक विभागीय पृष्ठ पर 2026-27 के लिए छात्रवृत्ति पोर्टल संबंधी सूचनाएँ सूचीबद्ध हैं, जिनमें कुछ योजनाओं के पोर्टल खुलने और संस्थान संबंधी समय-विस्तार की सूचनाएँ शामिल हैं।',
+    'आधिकारिक विभागीय पृष्ठ पर 2026-27 के लिए कालीबाई/देवनारायण स्कूटी, मुख्यमंत्री छात्रवृत्ति, बालिका दूरस्थ शिक्षा, विधवा/परित्यक्ता B.Ed. संबल तथा ST छात्राओं की योजनाओं से जुड़ी पोर्टल सूचना सूचीबद्ध है। उसी पृष्ठ पर संस्थान छात्रवृत्ति पोर्टल के लिए 31-10-2026 तक समय-विस्तार का उल्लेख है। यह तारीख संस्थान-पोर्टल सूचना से संबंधित है; इसे सभी विद्यार्थियों की आवेदन-अंतिम तिथि न मानें। प्रत्येक योजना की अलग अधिसूचना, पात्रता और अंतिम तिथि आधिकारिक पृष्ठ पर जाँचें।',
+    'योजना-विशिष्ट पात्रता लागू होगी।',
+    'योजना के अनुसार छात्रवृत्ति, प्रोत्साहन या अन्य सहायता।',
+    'योजना के अनुसार; मूल अधिसूचना और पोर्टल पर सूचीबद्ध दस्तावेज़ देखें।',
+    'https://hte.rajasthan.gov.in/HTE/30992', 'https://scholarship.rajasthan.gov.in/',
+    array['scholarship','rajasthan'], 'published', true, '2026-10-20T00:00:00Z'
+  )
+on conflict (slug) do update set
+  title=excluded.title,
+  summary=excluded.summary,
+  body=excluded.body,
+  eligibility=excluded.eligibility,
+  benefits=excluded.benefits,
+  required_documents=excluded.required_documents,
+  official_url=excluded.official_url,
+  notification_url=excluded.notification_url,
+  category_slugs=excluded.category_slugs,
+  status=excluded.status,
+  featured=excluded.featured,
+  last_verified_at=excluded.last_verified_at,
+  updated_at=now();
