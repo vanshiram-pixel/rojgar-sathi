@@ -126,7 +126,7 @@ function ContentManager() {
         ...form,
         title: String(form.title || "").trim(),
         slug,
-        category_slugs: [...new Set([...(Array.isArray(form.category_slugs) ? form.category_slugs : []), ...(form.primary_category_slug ? [form.primary_category_slug] : []), ...(form.state_slug ? [form.state_slug] : []), ...(form.department_slug ? [form.department_slug] : [])]),
+        category_slugs: [...new Set([...(Array.isArray(form.category_slugs) ? form.category_slugs : []), ...(form.primary_category_slug ? [form.primary_category_slug] : []), ...(form.state_slug ? [form.state_slug] : []), ...(form.department_slug ? [form.department_slug] : [])])],
         state_slug: form.state_slug || "",
         department_slug: form.department_slug || "",
         primary_category_slug: form.primary_category_slug || "",
