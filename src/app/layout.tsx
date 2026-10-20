@@ -23,7 +23,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const s = await getSettings();
   return <html lang="hi" data-theme={s.theme_mode} data-layout={s.layout_preset} style={{ "--primary": s.primary_color, "--accent": s.accent_color, "--page-bg": s.background_color } as React.CSSProperties}>
-    <head>{s.custom_css ? <style dangerouslySetInnerHTML={{ __html: s.custom_css.replace(/<\\/style/gi, "") }} /> : null}</head>
+    <head>{s.custom_css ? <style dangerouslySetInnerHTML={{ __html: s.custom_css.replace(/<\/style/gi, "") }} /> : null}</head>
     <body style={{ fontFamily: s.font_family === "hind" ? "Hind, sans-serif" : s.font_family === "inter" ? "Inter, sans-serif" : "Inter, Hind, system-ui, sans-serif" }}><SplashScreen />{children}</body>
   </html>;
 }
