@@ -59,6 +59,18 @@ export default async function Category({ params }: { params: Promise<{ slug: str
       const tagged = await supabase.from("jobs").select("*").eq("status", "published")
         .contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);
       if (!tagged.error) jobs = tagged.data || [];
+      if (category.category_type === "department" && !jobs.length) {
+        const byDepartment = await supabase.from("jobs").select("*").eq("status", "published")
+          .eq("department_slug", slug).order("created_at", { ascending: false }).limit(100);
+        jobs = byDepartment.data || [];
+      }
+      if (category.category_type === "state") {
+        const byState = await supabase.from("jobs").select("*").eq("status", "published")
+          .eq("state_slug", slug).order("created_at", { ascending: false }).limit(100);
+        const merged = new Map<string, any>();
+        [...jobs, ...(byState.data || [])].forEach((job: any) => merged.set(job.id, job));
+        jobs = [...merged.values()];
+      }
 
       if (!jobs.length && category.category_type === "qualification") {
         const needle = title.replace(/ Jobs$/i, "").replace(/ Pass$/i, "");
@@ -89,6 +101,14 @@ export default async function Category({ params }: { params: Promise<{ slug: str
   }
 
   const contentTypeBySlug: Record<string, string> = {
+    "latest-admit-cards": "admit_card",
+    "latest-results": "result",
+    "latest-answer-keys": "answer_key",
+    "latest-scholarships": "scholarship",
+    "latest-government-schemes": "scheme",
+    "latest-notifications": "",
+    "central-government-updates": "",
+    "state-government-updates": "",
     scholarship: "scholarship",
     "government-schemes": "scheme",
     schemes: "scheme",
@@ -105,6 +125,18 @@ export default async function Category({ params }: { params: Promise<{ slug: str
     const contentType = contentTypeBySlug[slug];
     if (contentType) {
       queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("content_type", contentType).order("created_at", { ascending: false }).limit(100));
+    }
+    if (slug === "latest-jobs" || slug === "latest-notifications" || slug === "central-government-updates" || slug === "state-government-updates") {
+      const level = slug === "central-government-updates" ? "central" : slug === "state-government-updates" ? "state" : null;
+      let q = supabase.from("content_items").select("*").eq("status", "published").order("created_at", { ascending: false }).limit(100);
+      if (level) q = q.eq("government_level", level);
+      queries.push(q);
+    }
+    if (category?.category_type === "department") {
+      queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("department_slug", slug).order("created_at", { ascending: false }).limit(100));
+    }
+    if (category?.category_type === "state") {
+      queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("state_slug", slug).order("created_at", { ascending: false }).limit(100));
     }
     queries.push(supabase.from("content_items").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100));
     const results = await Promise.all(queries);
