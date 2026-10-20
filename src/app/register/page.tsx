@@ -1,5 +1,92 @@
 "use client";
-import {useState} from "react";import Link from "next/link";import {useRouter} from "next/navigation";import {createClient} from "@/lib/supabase/client";
-export default function Register(){const [name,setName]=useState("");const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [error,setError]=useState("");const [msg,setMsg]=useState("");const [busy,setBusy]=useState(false);const router=useRouter();
-async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setError("");setMsg("");try{const s=createClient();const {data,error}=await s.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:typeof window!=="undefined"?window.location.origin+"/profile":undefined}});if(error)throw error;if(data.session){await s.from("user_profiles").upsert({user_id:data.user!.id,full_name:name},{onConflict:"user_id"});router.push("/profile");router.refresh();}else setMsg("खाता बनाने का अनुरोध सफल है। ईमेल में आए सत्यापन लिंक पर क्लिक करके फिर लॉगिन करें।");}catch(e:any){setError(e.message||"खाता नहीं बन पाया।");}finally{setBusy(false)}}
-return <main className="admin-login"><form className="login-card" onSubmit={submit}><Link className="brand" href="/">Rojgar Sathi</Link><h1>यूज़र अकाउंट बनाएँ</h1><p className="sub">अपनी पसंद की भर्ती और अपडेट पाने के लिए पंजीकरण करें।</p>{error&&<div className="notice error">{error}</div>}{msg&&<div className="notice">{msg}</div>}<label className="field">पूरा नाम<input value={name} onChange={e=>setName(e.target.value)} required autoComplete="name"/></label><label className="field">ईमेल<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required autoComplete="email"/></label><label className="field">पासवर्ड (कम से कम 8 अक्षर)<input type="password" minLength={8} value={password} onChange={e=>setPassword(e.target.value)} required autoComplete="new-password"/></label><button className="btn" disabled={busy}>{busy?"खाता बन रहा है…":"खाता बनाएँ"}</button><p className="sub">पहले से अकाउंट है? <Link href="/login" className="text-link">लॉगिन करें</Link></p><p className="sub"><Link href="/" className="text-link">← वेबसाइट पर वापस जाएँ</Link></p></form></main>}
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+
+function friendlyRegisterError(error: unknown) {
+  const e = error as { message?: string; code?: string; status?: number };
+  const message = (e?.message || "").toLowerCase();
+  if (message.includes("already registered") || message.includes("user already registered") || message.includes("already been registered")) return "इस ईमेल से अकाउंट पहले से बना हुआ है। नया अकाउंट बनाने के बजाय लॉगिन करें।";
+  if (message.includes("password") && (message.includes("weak") || message.includes("short") || message.includes("least"))) return "पासवर्ड पर्याप्त मजबूत नहीं है। कम से कम 8 अक्षरों का नया पासवर्ड डालें।";
+  if (message.includes("email") && (message.includes("invalid") || message.includes("valid"))) return "कृपया सही ईमेल पता डालें।";
+  if (e.status === 429 || message.includes("too many requests")) return "बहुत अधिक प्रयास हो चुके हैं। कुछ मिनट बाद दोबारा कोशिश करें।";
+  if (message.includes("fetch") || message.includes("network") || message.includes("failed to")) return "सर्वर से कनेक्शन नहीं हो पा रहा। इंटरनेट जाँचकर फिर कोशिश करें।";
+  return e.message ? `रजिस्ट्रेशन नहीं हो पाया: ${e.message}` : "रजिस्ट्रेशन पूरा नहीं हो पाया। कृपया दोबारा कोशिश करें।";
+}
+
+export default function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState(false);
+  const router = useRouter();
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    setMsg("");
+    try {
+      const supabase = createClient();
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          data: { full_name: name.trim() },
+          emailRedirectTo: window.location.origin + "/profile",
+        },
+      });
+      if (signUpError) throw signUpError;
+
+      if (data.session && data.user) {
+        const { error: profileError } = await supabase.from("user_profiles").upsert(
+          { user_id: data.user.id, full_name: name.trim() },
+          { onConflict: "user_id" },
+        );
+        if (profileError) {
+          setMsg("आपका अकाउंट बन गया है, लेकिन प्रोफाइल सेव नहीं हो सकी। कृपया लॉगिन करके दोबारा कोशिश करें।");
+          return;
+        }
+        setMsg("रजिस्ट्रेशन सफल! आपकी प्रोफाइल खोली जा रही है…");
+        router.replace("/profile");
+        router.refresh();
+        return;
+      }
+
+      setMsg("रजिस्ट्रेशन अनुरोध प्राप्त हुआ। यदि इस ईमेल पर सत्यापन संदेश आता है, तो उसमें दिए लिंक से ईमेल सत्यापित करें; उसके बाद लॉगिन करें। यदि अकाउंट पहले से है, तो लॉगिन पेज खोलें।");
+    } catch (err) {
+      setError(friendlyRegisterError(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <main className="admin-login">
+      <form className="login-card" onSubmit={submit}>
+        <Link className="brand" href="/">Rojgar Sathi</Link>
+        <h1>यूज़र अकाउंट बनाएँ</h1>
+        <p className="sub">अपनी पसंद की भर्ती और अपडेट पाने के लिए पंजीकरण करें।</p>
+        {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
+        {msg && <div className="notice" role="status" aria-live="polite">{msg}</div>}
+        <label className="field">पूरा नाम
+          <input value={name} onChange={e => setName(e.target.value)} required autoComplete="name" />
+        </label>
+        <label className="field">ईमेल
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="email" />
+        </label>
+        <label className="field">पासवर्ड (कम से कम 8 अक्षर)
+          <input type="password" minLength={8} value={password} onChange={e => setPassword(e.target.value)} required autoComplete="new-password" />
+        </label>
+        <button className="btn" disabled={busy}>{busy ? "खाता बन रहा है…" : "खाता बनाएँ"}</button>
+        <p className="sub">पहले से अकाउंट है? <Link href="/login" className="text-link">लॉगिन करें</Link></p>
+        <p className="sub"><Link href="/" className="text-link">← वेबसाइट पर वापस जाएँ</Link></p>
+      </form>
+    </main>
+  );
+}
