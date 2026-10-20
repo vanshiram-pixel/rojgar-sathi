@@ -34,7 +34,7 @@ export async function getPublishedJobs(search = "") {
   try {
     const supabase = await createClient();
     let query = supabase.from("jobs").select("*").eq("status","published").order("created_at",{ascending:false}).limit(100);
-    if (search.trim()) query = query.or(`title.ilike.%${search.trim().replace(/[%_,]/g," ")}%,organization.ilike.%${search.trim().replace(/[%_,]/g," ")}%,category.ilike.%${search.trim().replace(/[%_,]/g," ")}%`);
+    if (search.trim()) { const term = search.trim().replace(/[%_,]/g," "); query = query.or(`title.ilike.%${term}%,organization.ilike.%${term}%,category.ilike.%${term}%,department.ilike.%${term}%,qualification.ilike.%${term}%`); }
     const {data} = await query;
     return data ?? [];
   } catch { return []; }
