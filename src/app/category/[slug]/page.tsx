@@ -73,10 +73,12 @@ export default async function Category({ params }: { params: Promise<{ slug: str
       const tagged = await supabase.from("jobs").select("*").eq("status", "published")
         .contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);
       if (!tagged.error) jobs = tagged.data || [];
-      if (category.category_type === "department" && !jobs.length) {
+      if (category.category_type === "department") {
         const byDepartment = await supabase.from("jobs").select("*").eq("status", "published")
           .eq("department_slug", slug).order("created_at", { ascending: false }).limit(100);
-        jobs = byDepartment.data || [];
+        const unique = new Map<string, any>();
+        [...jobs, ...(byDepartment.data || [])].forEach((job: any) => unique.set(job.id, job));
+        jobs = [...unique.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       }
       if (category.category_type === "state") {
         const byState = await supabase.from("jobs").select("*").eq("status", "published")
