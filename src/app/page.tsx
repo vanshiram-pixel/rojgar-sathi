@@ -17,14 +17,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
   const [settings, jobs] = await Promise.all([getSettings(), getPublishedJobs(q)]);
   const nav = settings.navigation || [];
   return <>
-    <div className="topbar"><div className="wrap topbar-inner"><span>रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी</span><span><ShieldCheck size={13} /> आधिकारिक स्रोतों से पुष्टि करें</span></div></div>
+    <div className="topbar"><div className="wrap topbar-inner"><span>{settings.topbar_text || "रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी"}</span><span><ShieldCheck size={13} /> आधिकारिक स्रोतों से पुष्टि करें</span></div></div>
     <header className="header"><div className="wrap header-inner">
       <Link className="brand" href="/"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi logo" /><span className="brand-tagline">{settings.tagline}</span></Link>
-      <nav className="nav">{nav.map((n, i) => <Link key={i} href={n.href}>{n.label}</Link>)}<Link href="/admin/login">Admin</Link></nav>
+      <nav className="nav">{nav.map((n, i) => <Link key={i} href={n.href}>{n.label}</Link>)}<Link href="/categories">सभी श्रेणियाँ</Link><Link href="/admin/login">Admin</Link></nav>
       <Link className="mobile-menu text-link" href="/jobs">नौकरियाँ →</Link>
     </div></header>
     <nav className="portal-nav"><div className="wrap portal-nav-inner">
-      <Link href="/">होम</Link><Link href="/jobs">Latest Jobs</Link><Link href="/category/admit-card">Admit Card</Link><Link href="/category/result">Results</Link><Link href="/category/answer-key">Answer Key</Link><Link href="/category/scholarship">Scholarship</Link>
+      <Link href="/">होम</Link><Link href="/jobs">Latest Jobs</Link><Link href="/categories">सभी श्रेणियाँ</Link><Link href="/category/admit-card">Admit Card</Link><Link href="/category/result">Results</Link><Link href="/category/answer-key">Answer Key</Link><Link href="/category/scholarship">Scholarship</Link>
     </div></nav>
     <main>
       <section className="portal-hero"><div className="wrap">
@@ -32,7 +32,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
           <div className="portal-trust"><ShieldCheck size={25}/><strong>सही जानकारी, सही समय पर</strong><small>आवेदन से पहले आधिकारिक नोटिफिकेशन ज़रूर पढ़ें।</small></div>
         </div>
         <form action="/jobs" className="searchbar"><Search size={20} className="search-icon"/><input name="q" defaultValue={q} placeholder="भर्ती, विभाग, पद या योग्यता खोजें..." /><button className="btn" type="submit">खोजें <ArrowUpRight size={17}/></button></form>
-        <div className="portal-shortcuts"><Link href="/jobs"><BriefcaseBusiness/>Latest Jobs</Link><Link href="/category/admit-card"><ClipboardList/>Admit Card</Link><Link href="/category/result"><Trophy/>Results</Link><Link href="/category/scholarship"><GraduationCap/>Scholarships</Link><Link href="/jobs"><BookOpenCheck/>Education Updates</Link></div>
+        <div className="portal-shortcuts"><Link href="/jobs"><BriefcaseBusiness/>Latest Jobs</Link><Link href="/category/admit-card"><ClipboardList/>Admit Card</Link><Link href="/category/result"><Trophy/>Results</Link><Link href="/category/scholarship"><GraduationCap/>Scholarships</Link><Link href="/jobs"><BookOpenCheck/>Education Updates</Link><Link href="/categories">सभी श्रेणियाँ</Link></div>
       </div></section>
       <div className="wrap portal-ad"><AdSlot enabled={settings.ads_enabled} client={settings.adsense_client} slot={settings.ad_slot_home}/></div>
       <section className="section portal-section"><div className="wrap"><div className="section-head"><div><h2>{q ? `“${q}” के खोज परिणाम` : "लेटेस्ट सरकारी नौकरियाँ"}</h2><div className="sub">नई भर्ती, आवेदन की जानकारी और ज़रूरी अपडेट एक जगह।</div></div><Link className="text-link" href="/jobs">सभी नौकरियाँ देखें →</Link></div>
@@ -45,6 +45,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         {[["💼", "सरकारी नौकरी", "/jobs"], ["🎫", "एडमिट कार्ड", "/category/admit-card"], ["🏆", "रिजल्ट", "/category/result"], ["🎓", "छात्रवृत्ति", "/category/scholarship"]].map(([icon, label, href]) => <Link className="category" href={href} key={href}><span>{icon}</span>{label}<ArrowUpRight size={15}/></Link>)}
       </div></div></section>
     </main>
-    <footer className="footer"><div className="wrap footer-inner"><div><img className="brand-logo footer-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/privacy">गोपनीयता नीति</Link><Link href="/disclaimer">अस्वीकरण</Link><small>किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।</small></div></div></footer>
+    <footer className="footer"><div className="wrap footer-inner"><div><img className="brand-logo footer-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/categories">सभी श्रेणियाँ और राज्य</Link><Link href="/privacy">गोपनीयता नीति</Link><Link href="/disclaimer">अस्वीकरण</Link><small>{settings.footer_text || "किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।"}</small></div></div></footer>
   </>;
 }
