@@ -27,7 +27,28 @@ export default function Register() {
   const [resending, setResending] = useState(false);
   const router = useRouter();
 
-  async function googleRegister() {\n    if (busy) return;\n    setBusy(true); setError(""); setMsg("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", queryParams: { access_type: "offline", prompt: "select_account" } } });\n      if (error) throw error;\n    } catch (err) { setError(friendlyRegisterError(err)); setBusy(false); }\n  }\n\n  async function resendVerification() {\n    if (!pendingEmail || resending) return;\n    setResending(true); setError(""); setMsg("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" } });\n      if (error) throw error;\n      setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");\n    } catch (err) { setError(friendlyRegisterError(err)); }\n    finally { setResending(false); }\n  }\n\n  async function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function googleRegister() {\n    if (busy) return;\n    setBusy(true); setError(""); setMsg("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", queryParams: { access_type: "offline", prompt: "select_account" } } });\n      if (error) throw error;\n    } catch (err) { setError(friendlyRegisterError(err)); setBusy(false); }\n  }\n\n  async function resendVerification() {\n    if (!pendingEmail || resending) return;\n    setResending(true); setError(""); setMsg("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" } });\n      if (error) throw error;\n      setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");\n    } catch (err) { setError(friendlyRegisterError(err)); }\n    finally { setResending(false); }\n  }\n\n  async function resendVerification() {
+    if (!pendingEmail || resending) return;
+    setResending(true);
+    setError("");
+    setMsg("");
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingEmail,
+        options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" },
+      });
+      if (error) throw error;
+      setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");
+    } catch (err) {
+      setError(friendlyRegisterError(err));
+    } finally {
+      setResending(false);
+    }
+  }
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
     setBusy(true);
