@@ -33,9 +33,15 @@ export async function getSettings(): Promise<SiteSettings> {
 export async function getPublishedJobs(search = "") {
   try {
     const supabase = await createClient();
+    const term = search.trim().replace(/[%_,]/g," ");
     let query = supabase.from("jobs").select("*").eq("status","published").order("created_at",{ascending:false}).limit(100);
-    if (search.trim()) { const term = search.trim().replace(/[%_,]/g," "); query = query.or(`title.ilike.%${term}%,organization.ilike.%${term}%,category.ilike.%${term}%,department.ilike.%${term}%,qualification.ilike.%${term}%`); }
-    const {data} = await query;
-    return data ?? [];
+    if (term) query = query.or(`title.ilike.%${term}%,organization.ilike.%${term}%,category.ilike.%${term}%,department.ilike.%${term}%,qualification.ilike.%${term}%`);
+    const result = await query;
+    if (!result.error) return result.data ?? [];
+    // Compatibility fallback until the department metadata migration is applied.
+    let legacy = supabase.from("jobs").select("*").eq("status","published").order("created_at",{ascending:false}).limit(100);
+    if (term) legacy = legacy.or(`title.ilike.%${term}%,organization.ilike.%${term}%,category.ilike.%${term}%`);
+    const fallback = await legacy;
+    return fallback.data ?? [];
   } catch { return []; }
 }
