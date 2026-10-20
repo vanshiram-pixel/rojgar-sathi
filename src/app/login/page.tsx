@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 function friendlyLoginError(error: unknown) {
@@ -33,7 +33,7 @@ export default function Login() {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
+
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -51,7 +51,7 @@ export default function Login() {
       if (!data.user) throw new Error("लॉगिन तो हुआ, लेकिन यूज़र जानकारी नहीं मिली। दोबारा कोशिश करें।");
 
       setNotice("लॉगिन सफल। आपकी प्रोफाइल खोली जा रही है…");
-      const next = searchParams.get("next");
+      const next = new URLSearchParams(window.location.search).get("next");
       const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/admin") ? next : "/profile";
       router.replace(safeNext);
       router.refresh();
