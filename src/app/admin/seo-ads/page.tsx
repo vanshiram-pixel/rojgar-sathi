@@ -70,13 +70,13 @@ function SeoAdsForm() {
     }
   }
 
-  const field = (label: string, key: "seo_title" | "seo_description" | "adsense_client" | "ad_slot_home" | "ad_slot_job", help?: string) => (
+  const field = (label: string, key: "seo_title" | "seo_description" | "adsense_client" | "ad_slot_home" | "ad_slot_job", placeholder?: string, help?: string) => (
     <label className="field" key={key}>
       {label}
       {key === "seo_description" ? (
         <textarea value={config[key]} maxLength={320} onChange={(event) => change(key, event.target.value)} />
       ) : (
-        <input value={config[key]} onChange={(event) => change(key, event.target.value)} />
+        <input value={config[key]} placeholder={placeholder} onChange={(event) => change(key, event.target.value)} />
       )}
       {help ? <small className="sub">{help}</small> : null}
     </label>
