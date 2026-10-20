@@ -23,6 +23,8 @@ const updates = [
   { title: "Results & Merit Lists", detail: "परिणाम, चयन सूची और कटऑफ", href: "/category/result", icon: Trophy },
   { title: "Answer Keys", detail: "उत्तर कुंजी और आपत्ति की जानकारी", href: "/category/answer-key", icon: BookOpenCheck },
   { title: "Scholarships & Admissions", detail: "छात्रवृत्ति, प्रवेश और काउंसलिंग", href: "/category/scholarship", icon: GraduationCap },
+  { title: "Government Schemes", detail: "केंद्र और राज्य सरकार की योजनाएँ", href: "/category/government-schemes", icon: Landmark },
+  { title: "University Updates", detail: "विश्वविद्यालय, कॉलेज और परीक्षा अपडेट", href: "/category/university-updates", icon: BookOpenCheck },
 ];
 
 const qualifications = [
@@ -68,6 +70,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <Link href="/categories">विभाग व श्रेणियाँ</Link>
         <Link href="/category/admit-card">Admit Card</Link>
         <Link href="/category/result">Results</Link>
+        <Link href="/category/scholarship">Scholarships</Link>
+        <Link href="/category/government-schemes">Schemes</Link>
         <Link href="/login">लॉगिन</Link>
       </nav>
       <Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link>
