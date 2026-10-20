@@ -81,7 +81,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <div className="portal-intro"><div><span className="eyebrow"><BriefcaseBusiness size={14} /> Rojgar Sathi · भर्ती और परीक्षा सूचना</span><h1>{settings.home_hero_title}</h1><p>{settings.home_hero_subtitle}</p></div>
           <div className="portal-trust"><ShieldCheck size={25}/><strong>स्रोत-आधारित जानकारी</strong><small>आवेदन करने से पहले मूल अधिसूचना और पात्रता की पुष्टि करें।</small></div>
         </div>
-        <form action="/jobs" className="searchbar"><Search size={20} className="search-icon"/><input name="q" defaultValue={q} placeholder="भर्ती, विभाग, पद या योग्यता खोजें..." /><button className="btn" type="submit">खोजें <ArrowUpRight size={17}/></button></form>
+        <form action="/search" className="searchbar"><Search size={20} className="search-icon"/><input name="q" defaultValue={q} placeholder="भर्ती, विभाग, पद या योग्यता खोजें..." /><button className="btn" type="submit">खोजें <ArrowUpRight size={17}/></button></form>
         <div className="portal-shortcuts">
           <Link href="/jobs"><BriefcaseBusiness/>सभी नई भर्तियाँ</Link>
           <Link href="/categories"><Building2/>विभाग के अनुसार</Link>
