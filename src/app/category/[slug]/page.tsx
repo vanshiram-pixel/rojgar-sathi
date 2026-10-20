@@ -55,7 +55,21 @@ export default async function Category({ params }: { params: Promise<{ slug: str
 
   let jobs: any[] = [];
   try {
-    if (category) {
+    if (slug === "latest-jobs" || slug === "latest-notifications") {
+      const allPublished = await supabase.from("jobs").select("*").eq("status", "published")
+        .order("created_at", { ascending: false }).limit(100);
+      jobs = allPublished.data || [];
+    } else if (["latest-admit-cards", "latest-results", "latest-answer-keys"].includes(slug)) {
+      const legacyLabel = slug === "latest-admit-cards" ? "एडमिट कार्ड" : slug === "latest-results" ? "रिजल्ट" : "आंसर की";
+      const byType = await supabase.from("jobs").select("*").eq("status", "published")
+        .or("category.ilike.%" + legacyLabel + "%,recruitment_type.ilike.%" + legacyLabel + "%")
+        .order("created_at", { ascending: false }).limit(100);
+      const byTag = await supabase.from("jobs").select("*").eq("status", "published")
+        .contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);
+      const unique = new Map<string, any>();
+      [...(byType.data || []), ...(byTag.data || [])].forEach((job: any) => unique.set(job.id, job));
+      jobs = [...unique.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else if (category) {
       const tagged = await supabase.from("jobs").select("*").eq("status", "published")
         .contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);
       if (!tagged.error) jobs = tagged.data || [];
