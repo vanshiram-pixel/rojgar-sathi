@@ -43,28 +43,23 @@ export default async function Category({ params }: { params: Promise<{ slug: str
 
   let jobs: any[] = [];
   try {
-    if (category?.category_type === "department" || category?.category_type === "state" || category?.category_type === "content" || category?.category_type === "employment" || category?.category_type === "exam" || category?.category_type === "education" || category?.category_type === "scheme") {\n      const { data } = await supabase.from("jobs").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);\n      jobs = data || [];\n    } else if (category?.category_type === "department") {
-      const { data } = await supabase.from("jobs").select("*").eq("status", "published").eq("department", category.name).order("created_at", { ascending: false }).limit(100);
+    if (category) {
+      const { data } = await supabase.from("jobs").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);
       jobs = data || [];
-    } else if (category?.category_type === "qualification") {
-      const needle = title.replace(/ Jobs$/i, "").replace(/ Pass$/i, "");
-      const { data } = await supabase.from("jobs").select("*").eq("status", "published").ilike("qualification", `%${needle}%`).order("created_at", { ascending: false }).limit(100);
-      jobs = data || [];
+      if (!jobs.length && category.category_type === "qualification") {
+        const needle = title.replace(/ Jobs$/i, "").replace(/ Pass$/i, "");
+        const { data: legacy } = await supabase.from("jobs").select("*").eq("status", "published").ilike("qualification", `%${needle}%`).order("created_at", { ascending: false }).limit(100);
+        jobs = legacy || [];
+      } else if (!jobs.length && category.category_type === "department") {
+        const { data: legacy } = await supabase.from("jobs").select("*").eq("status", "published").eq("department", category.name).order("created_at", { ascending: false }).limit(100);
+        jobs = legacy || [];
+      } else if (!jobs.length && category.category_type === "state") {
+        const { data: legacy } = await supabase.from("jobs").select("*").eq("status", "published").ilike("location", `%${stateNameForLegacy(title)}%`).order("created_at", { ascending: false }).limit(100);
+        jobs = legacy || [];
+      }
     } else {
       jobs = await getPublishedJobs(title);
     }
   } catch {
     jobs = await getPublishedJobs(title);
   }
-
-  return <>
-    <header className="header"><div className="wrap header-inner"><Link className="brand" href="/">रोज़गार साथी</Link><Link href="/categories" className="text-link">← सभी श्रेणियाँ</Link></div></header>
-    <main className="wrap page">
-      <p className="eyebrow">{category?.category_type === "department" ? "विभागवार भर्ती" : category?.category_type === "qualification" ? "योग्यता के अनुसार भर्ती" : "अपडेट श्रेणी"}</p>
-      <h1 className="page-title">{title}</h1>
-      <p className="sub">{category?.description || "संबंधित प्रकाशित भर्ती और अपडेट।"}</p>
-      {jobs.length ? <div className="job-grid">{jobs.map((job: any) => <JobCard key={job.id} job={job} />)}</div> : <div className="empty">अभी इस श्रेणी में कोई प्रकाशित अपडेट उपलब्ध नहीं है। व्यवस्थापक भर्ती जोड़ते समय सही विभाग/योग्यता चुनें। नई भर्ती प्रकाशित होने पर वह यहाँ दिखाई देगी।</div>}
-      <p className="sub"><Link className="text-link" href="/categories">सभी विभाग, योग्यता और राज्यवार अपडेट देखें →</Link></p>
-    </main>
-  </>;
-}
