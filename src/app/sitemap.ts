@@ -1,2 +1,25 @@
-import type {MetadataRoute} from "next";import {createClient} from "@/lib/supabase/server";
-export default async function sitemap():Promise<MetadataRoute.Sitemap>{const base=process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000";let jobs:any[]=[];try{const s=await createClient();const {data}=await s.from("jobs").select("id,updated_at").eq("status","published");jobs=data||[]}catch{}return [{url:base,lastModified:new Date(),changeFrequency:"daily",priority:1},{url:`${base}/jobs`,lastModified:new Date(),changeFrequency:"hourly",priority:.9},...jobs.map(j=>({url:`${base}/jobs/${j.id}`,lastModified:new Date(j.updated_at||Date.now()),changeFrequency:"weekly" as const,priority:.7}))];}
+import type { MetadataRoute } from "next";
+import { createClient } from "@/lib/supabase/server";
+
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar-vncs-projects-c99f6301.vercel.app").replace(/\/$/, "");
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let jobs: { id: string; updated_at?: string | null }[] = [];
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.from("jobs").select("id,updated_at").eq("status", "published");
+    jobs = data || [];
+  } catch {
+    // Keep core public URLs available even before Supabase is configured.
+  }
+  return [
+    { url: siteUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
+    { url: `${siteUrl}/jobs`, lastModified: new Date(), changeFrequency: "hourly", priority: 0.9 },
+    ...jobs.map((job) => ({
+      url: `${siteUrl}/jobs/${job.id}`,
+      lastModified: new Date(job.updated_at || Date.now()),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    })),
+  ];
+}
