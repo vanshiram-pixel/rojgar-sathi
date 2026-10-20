@@ -37,8 +37,8 @@ const qualifications = [
   ["पोस्ट ग्रेजुएट", "/category/postgraduate-jobs"],
 ];
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const { q = "" } = await searchParams;
+export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string; email_verified?: string }> }) {
+  const { q = "", email_verified = "" } = await searchParams;
   const [settings, jobs] = await Promise.all([getSettings(), getPublishedJobs(q)]);
   let departmentLinks = departments;
   try {
@@ -77,6 +77,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       <div className="mobile-auth"><Link href="/login">लॉगिन</Link><Link href="/register">रजिस्टर</Link><Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link></div>
     </div></header>
     <main>
+      {email_verified === "1" && <div className="wrap" style={{ paddingTop: 16 }}><div className="notice" role="status">ईमेल सफलतापूर्वक सत्यापित हो गया है। Rojgar Sathi में आपका स्वागत है। अब लॉगिन करके अपनी प्रोफाइल और डैशबोर्ड देख सकते हैं। <Link className="text-link" href="/login">लॉगिन करें →</Link></div></div>}
       <section className="portal-hero"><div className="wrap">
         <div className="portal-intro"><div><span className="eyebrow"><BriefcaseBusiness size={14} /> Rojgar Sathi · भर्ती और परीक्षा सूचना</span><h1>{settings.home_hero_title}</h1><p>{settings.home_hero_subtitle}</p></div>
           <div className="portal-trust"><ShieldCheck size={25}/><strong>स्रोत-आधारित जानकारी</strong><small>आवेदन करने से पहले मूल अधिसूचना और पात्रता की पुष्टि करें।</small></div>
