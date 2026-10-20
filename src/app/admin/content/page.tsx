@@ -30,6 +30,7 @@ function ContentManager() {
   const [error, setError] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
   const [listSearch, setListSearch] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
 
   async function load() {
     const client = createClient();
@@ -283,6 +284,8 @@ function ContentManager() {
             <textarea rows={8} value={form.body} onChange={(e) => set("body", e.target.value)} />
           </label>
         </div>
+        <button type="button" className="small-btn" style={{ margin: "14px 8px 14px 0" }} onClick={() => setShowPreview((v) => !v)} aria-expanded={showPreview}>{showPreview ? "पूर्वावलोकन बंद करें" : "ड्राफ्ट / पोस्ट पूर्वावलोकन"}</button>
+        {showPreview ? <section className="admin-card preview-card" aria-label="पोस्ट पूर्वावलोकन"><p className="sub">पूर्वावलोकन · {form.status === "published" ? "प्रकाशित स्थिति चुनी गई है" : "यह अभी सार्वजनिक रूप से प्रकाशित नहीं है"}</p>{form.image_url ? <img src={form.image_url} alt="" style={{ maxWidth: "100%", maxHeight: 220, objectFit: "contain", borderRadius: 10 }} /> : null}<span className="tag">{typeLabels[form.content_type] || form.content_type || "अपडेट"}</span><h2>{form.title || "पोस्ट का शीर्षक यहाँ दिखेगा"}</h2>{form.summary ? <p><strong>{form.summary}</strong></p> : null}<p>{form.body || "पूरा विवरण यहाँ दिखाई देगा।"}</p><div className="preview-facts">{[["राज्य",form.state_name],["विभाग",form.department],["आवेदन प्रारंभ",form.application_start],["अंतिम तिथि",form.application_end],["पात्रता",form.eligibility],["लाभ",form.benefits],["आवश्यक दस्तावेज़",form.required_documents]].filter(([,v])=>String(v||"").trim()).map(([label,value])=><div key={String(label)}><small>{label}</small><strong>{String(value)}</strong></div>)}</div>{form.official_url ? <p><strong>आधिकारिक वेबसाइट:</strong> {form.official_url}</p> : null}{form.notification_url ? <p><strong>अधिसूचना:</strong> {form.notification_url}</p> : null}</section> : null}
         <button className="btn" disabled={busy || uploading}>{busy ? "सेव हो रहा है…" : editId ? "बदलाव सेव करें" : "पोस्ट सेव करें"}</button>
         {editId ? <button type="button" className="small-btn" onClick={reset}>रद्द करें</button> : null}
       </form>
