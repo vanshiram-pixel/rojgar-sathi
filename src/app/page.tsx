@@ -20,11 +20,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
     <div className="topbar"><div className="wrap topbar-inner"><span>{settings.topbar_text || "रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी"}</span><span><ShieldCheck size={13} /> आधिकारिक स्रोतों से पुष्टि करें</span></div></div>
     <header className="header"><div className="wrap header-inner">
       <Link className="brand" href="/"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi logo" /><span className="brand-tagline">{settings.tagline}</span></Link>
-      <nav className="nav">{nav.map((n, i) => <Link key={i} href={n.href}>{n.label}</Link>)}<Link href="/categories">सभी श्रेणियाँ</Link><Link href="/admin/login">Admin</Link></nav>
+      <nav className="nav">{nav.map((n, i) => <Link key={i} href={n.href}>{n.label}</Link>)}<Link href="/categories">सभी श्रेणियाँ</Link><Link href="/login">यूज़र लॉगिन</Link><Link href="/register">अकाउंट बनाएँ</Link><Link href="/admin/login">Admin</Link></nav>
       <Link className="mobile-menu text-link" href="/jobs">नौकरियाँ →</Link>
     </div></header>
     <nav className="portal-nav"><div className="wrap portal-nav-inner">
-      <Link href="/">होम</Link><Link href="/jobs">Latest Jobs</Link><Link href="/categories">सभी श्रेणियाँ</Link><Link href="/category/admit-card">Admit Card</Link><Link href="/category/result">Results</Link><Link href="/category/answer-key">Answer Key</Link><Link href="/category/scholarship">Scholarship</Link>
+      <Link href="/">होम</Link><Link href="/jobs">Latest Jobs</Link><Link href="/categories">सभी श्रेणियाँ</Link><Link href="/category/admit-card">Admit Card</Link><Link href="/category/result">Results</Link><Link href="/category/answer-key">Answer Key</Link><Link href="/category/scholarship">Scholarship</Link><Link href="/profile">मेरी प्रोफाइल</Link>
     </div></nav>
     <main>
       <section className="portal-hero"><div className="wrap">
