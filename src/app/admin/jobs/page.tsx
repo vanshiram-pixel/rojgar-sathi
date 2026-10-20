@@ -110,7 +110,7 @@ function JobsAdmin() {
         ...form,
         title: String(form.title || "").trim(),
         organization: String(form.organization || "").trim(),
-        category_slugs: [...new Set([...(Array.isArray(form.category_slugs) ? form.category_slugs : []), ...(form.primary_category_slug ? [form.primary_category_slug] : []), ...(form.state_slug ? [form.state_slug] : []), ...(form.department_slug ? [form.department_slug] : [])]),
+        category_slugs: [...new Set([...(Array.isArray(form.category_slugs) ? form.category_slugs : []), ...(form.primary_category_slug ? [form.primary_category_slug] : []), ...(form.state_slug ? [form.state_slug] : []), ...(form.department_slug ? [form.department_slug] : [])])],
         application_start: form.application_start || null,
         application_end: form.application_end || null,
         exam_date: form.exam_date || null,
