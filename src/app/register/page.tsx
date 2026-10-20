@@ -49,27 +49,6 @@ export default function Register() {
     finally { setResending(false); }
   }
 
-  async function resendVerification() {
-    if (!pendingEmail || resending) return;
-    setResending(true);
-    setError("");
-    setMsg("");
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.resend({
-        type: "signup",
-        email: pendingEmail,
-        options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" },
-      });
-      if (error) throw error;
-      setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");
-    } catch (err) {
-      setError(friendlyRegisterError(err));
-    } finally {
-      setResending(false);
-    }
-  }
-
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
