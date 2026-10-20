@@ -74,7 +74,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <Link href="/category/government-schemes">Schemes</Link>
         <Link href="/login">लॉगिन</Link>
       </nav>
-      <Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link>
+      <div className="mobile-auth"><Link href="/login">लॉगिन</Link><Link href="/register">रजिस्टर</Link><Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link></div>
     </div></header>
     <main>
       <section className="portal-hero"><div className="wrap">
