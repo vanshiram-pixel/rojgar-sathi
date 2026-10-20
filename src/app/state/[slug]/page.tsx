@@ -11,8 +11,11 @@ export default async function StateJobsPage({ params }: { params: Promise<{ slug
   const { data: state } = await supabase.from("portal_categories").select("name,slug,description,category_type").eq("slug", slug).eq("category_type", "state").eq("is_active", true).maybeSingle();
   if (!state) notFound();
 
-  const { data } = await supabase.from("jobs").select("*").eq("status", "published").ilike("location", `%${state.name.replace(/[%_,]/g, " ")}%`).order("created_at", { ascending: false }).limit(100);
-  const jobs = data || [];
+  const { data: tagged } = await supabase.from("jobs").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);
+  const { data: byLocation } = await supabase.from("jobs").select("*").eq("status", "published").ilike("location", `%${state.name.replace(/[%_,]/g, " ")}%`).order("created_at", { ascending: false }).limit(100);
+  const uniqueJobs = new Map<string, any>();
+  [...(tagged || []), ...(byLocation || [])].forEach((job: any) => uniqueJobs.set(job.id, job));
+  const jobs = [...uniqueJobs.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   return <>
     <header className="header"><div className="wrap header-inner"><Link className="brand" href="/">रोज़गार साथी</Link><Link href="/categories" className="text-link">← सभी श्रेणियाँ</Link></div></header>
     <main className="wrap page">
