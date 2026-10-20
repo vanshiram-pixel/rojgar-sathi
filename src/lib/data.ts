@@ -1,0 +1,39 @@
+import { createClient } from "@/lib/supabase/server";
+
+export type SiteSettings = {
+  brand_name: string; tagline: string; logo_url: string; favicon_url: string;
+  splash_image_url: string; splash_title: string; splash_subtitle: string;
+  primary_color: string; accent_color: string; background_color: string;
+  theme_mode: "light" | "dark" | "system"; font_family: string; layout_preset: string;
+  home_hero_title: string; home_hero_subtitle: string; show_latest_jobs: boolean;
+  show_admission: boolean; show_scholarships: boolean; show_schemes: boolean;
+  navigation: {label:string;href:string}[]; seo_title: string; seo_description: string;
+  ads_enabled: boolean; adsense_client: string; ad_slot_home: string; ad_slot_job: string;
+};
+export const defaultSettings: SiteSettings = {
+  brand_name:"Updated Rojgar", tagline:"सरकारी नौकरी और करियर की सही जानकारी", logo_url:"", favicon_url:"",
+  splash_image_url:"", splash_title:"Updated Rojgar", splash_subtitle:"आपके भविष्य की सही शुरुआत",
+  primary_color:"#155eef", accent_color:"#12b981", background_color:"#f5f7fb", theme_mode:"light",
+  font_family:"system", layout_preset:"modern", home_hero_title:"अपनी अगली नौकरी यहाँ खोजें",
+  home_hero_subtitle:"सरकारी भर्ती, एडमिट कार्ड, रिजल्ट और छात्रवृत्ति अपडेट",
+  show_latest_jobs:true, show_admission:true, show_scholarships:true, show_schemes:true,
+  navigation:[{label:"सरकारी नौकरी",href:"/jobs"},{label:"एडमिट कार्ड",href:"/category/admit-card"},{label:"रिजल्ट",href:"/category/result"},{label:"स्कॉलरशिप",href:"/category/scholarship"}],
+  seo_title:"Updated Rojgar | सरकारी नौकरी", seo_description:"सरकारी नौकरी, भर्ती, एडमिट कार्ड, रिजल्ट और स्कॉलरशिप की जानकारी.",
+  ads_enabled:false, adsense_client:"", ad_slot_home:"", ad_slot_job:""
+};
+export async function getSettings(): Promise<SiteSettings> {
+  try {
+    const supabase = await createClient();
+    const {data} = await supabase.from("site_settings").select("*").eq("id",1).maybeSingle();
+    return {...defaultSettings, ...(data ?? {})} as SiteSettings;
+  } catch { return defaultSettings; }
+}
+export async function getPublishedJobs(search = "") {
+  try {
+    const supabase = await createClient();
+    let query = supabase.from("jobs").select("*").eq("status","published").order("created_at",{ascending:false}).limit(100);
+    if (search.trim()) query = query.or(`title.ilike.%${search.trim().replace(/[%_,]/g," ")}%,organization.ilike.%${search.trim().replace(/[%_,]/g," ")}%,category.ilike.%${search.trim().replace(/[%_,]/g," ")}%`);
+    const {data} = await query;
+    return data ?? [];
+  } catch { return []; }
+}

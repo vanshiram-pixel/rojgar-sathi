@@ -1,0 +1,6 @@
+import Link from "next/link";
+import { MapPin, CalendarDays, ArrowUpRight } from "lucide-react";
+export function JobCard({job}:{job:any}) {
+ const date=job.application_end?new Date(job.application_end+"T00:00:00").toLocaleDateString("hi-IN",{day:"numeric",month:"short",year:"numeric"}):"अधिसूचना देखें";
+ return <article className="job-card"><div className="job-top"><span className="tag">{job.category||"सरकारी नौकरी"}</span>{job.featured?<span style={{fontSize:11,color:"#9a6700",fontWeight:800}}>★ प्रमुख</span>:null}</div><h3>{job.title}</h3><div className="org">{job.organization||"विभाग की जानकारी देखें"}</div><div className="job-meta"><div><small><MapPin size={12} style={{display:"inline"}}/> स्थान</small><strong>{job.location||"भारत"}</strong></div><div><small><CalendarDays size={12} style={{display:"inline"}}/> अंतिम तिथि</small><strong>{date}</strong></div></div><div className="job-actions"><span style={{fontSize:12,color:"var(--muted)"}}>{job.vacancies?`${job.vacancies} पद`:"पद विवरण देखें"}</span><Link className="text-link" href={`/jobs/${job.id}`}>पूरी जानकारी <ArrowUpRight size={14} style={{display:"inline"}}/></Link></div></article>
+}
