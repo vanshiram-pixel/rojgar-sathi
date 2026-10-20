@@ -241,6 +241,20 @@ function JobsAdmin() {
           </label>
         </div>
 
+        <div className="form-grid" style={{ marginTop: 16 }}>
+          <label className="field">प्रकाशन स्थिति
+            <select value={form.status} onChange={(e) => set("status", e.target.value)}>
+              <option value="draft">ड्राफ्ट</option>
+              <option value="published">प्रकाशित</option>
+              <option value="archived">आर्काइव</option>
+            </select>
+          </label>
+          <label className="checkline">
+            <input type="checkbox" checked={!!form.featured} onChange={(e) => set("featured", e.target.checked)} />
+            प्रमुख भर्ती के रूप में दिखाएँ
+          </label>
+        </div>
+
         <button type="button" className="small-btn" style={{ margin: "14px 0" }}
           onClick={() => setShowAdvanced((v) => !v)} aria-expanded={showAdvanced}>
           {showAdvanced ? "− अतिरिक्त विवरण छिपाएँ" : "+ अतिरिक्त विवरण / एडवांस फ़ील्ड"}
@@ -253,21 +267,9 @@ function JobsAdmin() {
             {input("वेतन / पे-लेवल", "salary")}
             {input("चयन प्रक्रिया", "selection_process")}
             {input("आधिकारिक स्रोत / विभागीय पेज", "official_source", "url")}
-            <label className="field">
-              स्थिति
-              <select value={form.status} onChange={(e) => set("status", e.target.value)}>
-                <option value="draft">ड्राफ्ट</option>
-                <option value="published">प्रकाशित</option>
-                <option value="archived">आर्काइव</option>
-              </select>
-            </label>
             <label className="field full">
               भर्ती का विवरण
               <textarea rows={6} value={form.description || ""} onChange={(e) => set("description", e.target.value)} />
-            </label>
-            <label className="checkline">
-              <input type="checkbox" checked={!!form.featured} onChange={(e) => set("featured", e.target.checked)} />
-              प्रमुख भर्ती के रूप में दिखाएँ
             </label>
           </div>
         ) : (
