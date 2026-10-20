@@ -19,6 +19,7 @@ function JobsAdmin() {
   const [form, setForm] = useState<any>(blank);
   const [editId, setEditId] = useState("");
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState("");
   const [err, setErr] = useState("");
   const [filter, setFilter] = useState("");
@@ -68,6 +69,34 @@ function JobsAdmin() {
     setForm({ ...blank });
     setErr("");
     setMsg("");
+  }
+
+  async function uploadImage(file?: File) {
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setErr("केवल JPG, PNG या WebP इमेज चुनें।");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErr("इमेज 5 MB से छोटी होनी चाहिए।");
+      return;
+    }
+    setUploading(true);
+    setErr("");
+    try {
+      const client = createClient();
+      const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+      const path = "jobs/" + Date.now() + "-" + Math.random().toString(36).slice(2, 8) + "." + extension;
+      const { error } = await client.storage.from("content-images").upload(path, file, { upsert: false, contentType: file.type });
+      if (error) throw error;
+      const { data } = client.storage.from("content-images").getPublicUrl(path);
+      set("image_url", data.publicUrl);
+      setMsg("इमेज अपलोड हो गई। पोस्ट सेव करना न भूलें।");
+    } catch (e: any) {
+      setErr(e.message || "इमेज अपलोड नहीं हो सकी। content hub वाली SQL migration चलाएँ।");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function save(e: React.FormEvent) {
@@ -204,7 +233,12 @@ function JobsAdmin() {
           {input("पोस्ट की वैधता / समाप्ति", "valid_through", "date")}
           {input("आधिकारिक वेबसाइट URL", "official_url", "url")}
           {input("आधिकारिक नोटिफिकेशन URL", "notification_url", "url")}
-          {input("इमेज URL (वैकल्पिक)", "image_url", "url")}
+          <label className="field">पोस्ट इमेज (वैकल्पिक) — JPG, PNG, WebP, अधिकतम 5 MB
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => uploadImage(e.target.files?.[0])} disabled={uploading} />
+            {uploading ? <small>इमेज अपलोड हो रही है…</small> : null}
+            <input type="url" value={form.image_url || ""} onChange={(e) => set("image_url", e.target.value)} placeholder="या इमेज URL डालें" />
+            {form.image_url ? <img src={form.image_url} alt="पोस्ट पूर्वावलोकन" style={{ maxWidth: 220, maxHeight: 130, objectFit: "contain", borderRadius: 8 }} /> : null}
+          </label>
         </div>
 
         <button type="button" className="small-btn" style={{ margin: "14px 0" }}
@@ -240,7 +274,7 @@ function JobsAdmin() {
           <p className="sub">प्रकाशित करने, ड्राफ्ट रखने, इमेज और विस्तृत जानकारी के लिए एडवांस फ़ील्ड खोलें।</p>
         )}
 
-        <button className="btn" disabled={busy}>{busy ? "सेव हो रहा है…" : editId ? "बदलाव सेव करें" : "भर्ती सेव करें"}</button>
+        <button className="btn" disabled={busy || uploading}>{busy ? "सेव हो रहा है…" : uploading ? "इमेज अपलोड हो रही है…" : editId ? "बदलाव सेव करें" : "भर्ती सेव करें"}</button>
         {editId ? <button type="button" className="small-btn" onClick={resetForm}>रद्द करें</button> : null}
       </form>
 
