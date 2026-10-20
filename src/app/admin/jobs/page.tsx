@@ -24,6 +24,7 @@ function JobsAdmin() {
   const [err, setErr] = useState("");
   const [filter, setFilter] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   async function load() {
     const s = createClient();
@@ -298,6 +299,8 @@ function JobsAdmin() {
           <p className="sub">प्रकाशित करने, ड्राफ्ट रखने, इमेज और विस्तृत जानकारी के लिए एडवांस फ़ील्ड खोलें।</p>
         )}
 
+        <button type="button" className="small-btn" style={{ margin: "14px 8px 14px 0" }} onClick={() => setShowPreview((v) => !v)} aria-expanded={showPreview}>{showPreview ? "पूर्वावलोकन बंद करें" : "ड्राफ्ट / पोस्ट पूर्वावलोकन"}</button>
+        {showPreview ? <section className="admin-card preview-card" aria-label="पोस्ट पूर्वावलोकन"><p className="sub">पूर्वावलोकन · {form.status === "published" ? "प्रकाशित स्थिति चुनी गई है" : "यह अभी सार्वजनिक रूप से प्रकाशित नहीं है"}</p>{form.image_url ? <img src={form.image_url} alt="" style={{ maxWidth: "100%", maxHeight: 220, objectFit: "contain", borderRadius: 10 }} /> : null}<span className="tag">{form.category || "सरकारी नौकरी"}</span><h2>{form.title || "भर्ती का शीर्षक यहाँ दिखेगा"}</h2><p><strong>{form.organization || "विभाग / संस्था"}</strong></p><p>{form.description || "भर्ती का विवरण यहाँ दिखाई देगा। अतिरिक्त विवरण भरने पर वे भी नीचे दिखेंगे।"}</p><div className="preview-facts">{[["राज्य / स्थान",form.location],["योग्यता",form.qualification],["कुल पद",form.vacancies],["आयु सीमा",form.age_limit],["वेतन",form.salary],["आवेदन प्रारंभ",form.application_start],["अंतिम तिथि",form.application_end],["परीक्षा तिथि",form.exam_date]].filter(([,v])=>String(v||"").trim()).map(([label,value])=><div key={String(label)}><small>{label}</small><strong>{String(value)}</strong></div>)}</div>{form.official_url ? <p><strong>आधिकारिक वेबसाइट:</strong> {form.official_url}</p> : null}{form.notification_url ? <p><strong>अधिसूचना:</strong> {form.notification_url}</p> : null}</section> : null}
         <button className="btn" disabled={busy || uploading}>{busy ? "सेव हो रहा है…" : uploading ? "इमेज अपलोड हो रही है…" : editId ? "बदलाव सेव करें" : "भर्ती सेव करें"}</button>
         {editId ? <button type="button" className="small-btn" onClick={resetForm}>रद्द करें</button> : null}
       </form>
