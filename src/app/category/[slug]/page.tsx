@@ -43,7 +43,7 @@ export default async function Category({ params }: { params: Promise<{ slug: str
 
   let jobs: any[] = [];
   try {
-    if (category?.category_type === "department") {
+    if (category?.category_type === "department" || category?.category_type === "state" || category?.category_type === "content" || category?.category_type === "employment" || category?.category_type === "exam" || category?.category_type === "education" || category?.category_type === "scheme") {\n      const { data } = await supabase.from("jobs").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100);\n      jobs = data || [];\n    } else if (category?.category_type === "department") {
       const { data } = await supabase.from("jobs").select("*").eq("status", "published").eq("department", category.name).order("created_at", { ascending: false }).limit(100);
       jobs = data || [];
     } else if (category?.category_type === "qualification") {
