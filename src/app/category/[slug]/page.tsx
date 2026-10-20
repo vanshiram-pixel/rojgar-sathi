@@ -88,6 +88,33 @@ export default async function Category({ params }: { params: Promise<{ slug: str
     jobs = await getPublishedJobs(title);
   }
 
+  const contentTypeBySlug: Record<string, string> = {
+    scholarship: "scholarship",
+    "government-schemes": "scheme",
+    schemes: "scheme",
+    admissions: "admission",
+    "university-updates": "university_update",
+    "exam-updates": "exam_update",
+    "admit-card": "admit_card",
+    result: "result",
+    "answer-key": "answer_key",
+  };
+  let contentItems: any[] = [];
+  try {
+    const queries: Promise<any>[] = [];
+    const contentType = contentTypeBySlug[slug];
+    if (contentType) {
+      queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("content_type", contentType).order("created_at", { ascending: false }).limit(100));
+    }
+    queries.push(supabase.from("content_items").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100));
+    const results = await Promise.all(queries);
+    const unique = new Map<string, any>();
+    results.forEach((result: any) => (result.data || []).forEach((item: any) => unique.set(item.id, item)));
+    contentItems = [...unique.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  } catch {
+    contentItems = [];
+  }
+
   return (
     <>
       <header className="header">
@@ -100,11 +127,32 @@ export default async function Category({ params }: { params: Promise<{ slug: str
         <p className="eyebrow">रोज़गार साथी · श्रेणीवार अपडेट</p>
         <h1 className="page-title">{title}</h1>
         <p className="sub">{category?.description || "इस श्रेणी से जुड़ी प्रकाशित सूचनाएँ और अवसर। आवेदन से पहले आधिकारिक अधिसूचना अवश्य पढ़ें।"}</p>
+        {contentItems.length ? (
+          <section className="section">
+            <h2>योजनाएँ और विद्यार्थी अपडेट</h2>
+            <div className="job-grid">
+              {contentItems.map((item: any) => (
+                <article className="job-card" key={item.id}>
+                  {item.image_url ? <img src={item.image_url} alt={item.title} style={{ width: "100%", maxHeight: 180, objectFit: "cover", borderRadius: 10 }} /> : null}
+                  <span className="tag">{item.government_level === "state" ? (item.state_name || "राज्य सरकार") : item.government_level === "central" ? "केंद्र सरकार" : item.government_level}</span>
+                  <h3>{item.title}</h3>
+                  <p className="sub">{item.summary || item.eligibility || ""}</p>
+                  {item.application_end ? <p className="sub">अंतिम तिथि: {item.application_end}</p> : null}
+                  <Link className="text-link" href={"/updates/" + item.slug}>पूरी जानकारी →</Link>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
         {jobs.length ? (
-          <div className="job-grid">{jobs.map((job: any) => <JobCard key={job.id} job={job} />)}</div>
-        ) : (
+          <section className="section">
+            <h2>संबंधित भर्ती</h2>
+            <div className="job-grid">{jobs.map((job: any) => <JobCard key={job.id} job={job} />)}</div>
+          </section>
+        ) : null}
+        {!contentItems.length && !jobs.length ? (
           <div className="empty">इस श्रेणी में अभी कोई प्रकाशित जानकारी नहीं मिली। आधिकारिक स्रोत से सत्यापित सूचना उपलब्ध होने पर यहाँ दिखाई जाएगी।</div>
-        )}
+        ) : null}
       </main>
     </>
   );
