@@ -3,6 +3,24 @@ import { createClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[char] || char);
+}
+
+function safeApplyUrl(value: unknown): string {
+  const fallback = "https://updated-rojgar.vercel.app/jobs";
+  if (typeof value !== "string" || !value.trim()) return fallback;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "https:" ? parsed.toString() : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 function matches(profile: any, job: any) {
   const chosen: string[] = Array.isArray(profile.categories) ? profile.categories : [];
   if (!chosen.length) return false;
@@ -64,12 +82,20 @@ export async function POST(request: Request) {
     for (const p of recipients) {
       const { data: existing } = await adminDb.from("user_alert_log").select("id").eq("user_id", p.user_id).eq("job_id", job.id).eq("channel", "email").maybeSingle();
       if (existing) { skipped++; continue; }
-      const safeTitle = String(job.title).replace(/[<>]/g, "");
-      const safeOrg = String(job.organization || "").replace(/[<>]/g, "");
-      const safeCategory = String(job.category || "").replace(/[<>]/g, "");
-      const details = String(job.description || "").replace(/[<>]/g, "").slice(0, 1200);
-      const applyUrl = job.official_url || job.notification_url || "https://updated-rojgar.vercel.app/jobs";
-      const payload = { from, to: [p.email], subject: "Rojgar Sathi Alert: " + safeTitle, html: '<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#172033"><h2>Rojgar Sathi</h2><p>नमस्ते ' + String(p.full_name || "दोस्त").replace(/[<>]/g, "") + ',</p><p>आपकी चुनी हुई कैटेगरी से मेल खाता नया अपडेट:</p><h2>' + safeTitle + '</h2><p><b>विभाग:</b> ' + safeOrg + '</p><p><b>कैटेगरी:</b> ' + safeCategory + '</p><p><b>स्थान:</b> ' + String(job.location || "").replace(/[<>]/g, "") + '</p><p><b>योग्यता:</b> ' + String(job.qualification || "").replace(/[<>]/g, "") + '</p><p>' + details + '</p><p><a href="' + applyUrl + '">आधिकारिक विवरण / आवेदन देखें</a></p><hr/><p style="font-size:12px;color:#667085">यह ईमेल आपकी Rojgar Sathi पसंद के आधार पर भेजा गया है। ईमेल बंद करने के लिए अपनी प्रोफाइल में Email Alerts बंद करें: <a href="https://updated-rojgar.vercel.app/profile">Notification Settings</a>.</p></div>' };
+      const safeTitle = escapeHtml(job.title);
+      const safeOrg = escapeHtml(job.organization || "");
+      const safeCategory = escapeHtml(job.category || "");
+      const details = escapeHtml(String(job.description || "").slice(0, 1200));
+      const applyUrl = safeApplyUrl(job.official_url || job.notification_url);
+      const safeName = escapeHtml(p.full_name || "दोस्त");
+      const safeLocation = escapeHtml(job.location || "");
+      const safeQualification = escapeHtml(job.qualification || "");
+      const payload = {
+        from,
+        to: [p.email],
+        subject: "Rojgar Sathi Alert: " + String(job.title || "").slice(0, 180),
+        html: '<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#172033"><h2>Rojgar Sathi</h2><p>नमस्ते ' + safeName + ',</p><p>आपकी चुनी हुई कैटेगरी से मेल खाता नया अपडेट:</p><h2>' + safeTitle + '</h2><p><b>विभाग:</b> ' + safeOrg + '</p><p><b>कैटेगरी:</b> ' + safeCategory + '</p><p><b>स्थान:</b> ' + safeLocation + '</p><p><b>योग्यता:</b> ' + safeQualification + '</p><p>' + details + '</p><p><a href="' + applyUrl + '">आधिकारिक विवरण / आवेदन देखें</a></p><hr/><p style="font-size:12px;color:#667085">यह ईमेल आपकी Rojgar Sathi पसंद के आधार पर भेजा गया है। ईमेल बंद करने के लिए अपनी प्रोफाइल में Email Alerts बंद करें: <a href="https://updated-rojgar.vercel.app/profile">Notification Settings</a>.</p></div>'
+      };
       try {
         const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: "Bearer " + apiKey, "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         if (!response.ok) { failed++; continue; }
