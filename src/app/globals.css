@@ -63,3 +63,9 @@ html[data-layout="compact"] .portal-hero{padding:20px}html[data-layout="compact"
 .vacancy-inline-ad{width:100%;margin:12px auto 18px;min-height:0}
 .vacancy-inline-ad:empty{display:none}
 @media(max-width:600px){.adsense-slot{margin:12px auto}.adsense-slot-compact{margin:8px auto;padding:3px 0}.vacancy-inline-ad{margin:8px auto 12px}}
+
+/* More ad opportunities, placed between content blocks rather than on every click */
+.portal-ad-inline{margin:20px auto 8px;max-width:970px}
+.detail-ad-block{margin:20px 0 24px;max-width:970px}
+.adsense-slot-compact{min-height:50px}
+@media(max-width:650px){.portal-ad-inline{margin:12px auto 4px}.detail-ad-block{margin:14px 0 18px}}
