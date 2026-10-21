@@ -6,7 +6,7 @@ import { ShieldCheck } from "lucide-react";
 
 type Props = { brandName: string; tagline: string; topbarText: string };
 
-export function SiteHeader({ brandName, tagline, topbarText }: Props) {
+export function SiteHeader({ tagline, topbarText }: Props) {
   const pathname = usePathname() || "/";
   const canonicalBrand = "Rojgar Sathi";
   // Keep the separate, private Admin navigation intact.
