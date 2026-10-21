@@ -47,7 +47,7 @@ export default function Login() {
         provider: "google",
         options: {
           redirectTo: window.location.origin + "/auth/callback?next=" + encodeURIComponent(safeNext),
-          queryParams: { access_type: "offline", prompt: "select_account" },
+          queryParams: { access_type: "offline" },
         },
       });
       if (error) throw error;
