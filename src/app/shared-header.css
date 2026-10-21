@@ -1,0 +1,26 @@
+/* One unified Rojgar Sathi header on all public pages. Legacy page headers are hidden only while the shared header is present; Admin remains untouched. */
+body:has(#site-header) .topbar:not(.unified-topbar),
+body:has(#site-header) header.header:not(#site-header) {
+  display: none !important;
+}
+.unified-topbar { display: block; }
+.unified-header { position: sticky; top: 0; z-index: 40; }
+.unified-header-inner { min-width: 0; }
+.unified-header-inner > .brand { flex-shrink: 0; min-width: 0; }
+.unified-header-inner .brand-tagline { max-width: 230px; }
+.unified-nav { min-width: 0; }
+@media (max-width: 980px) {
+  .unified-header-inner { flex-wrap: wrap; justify-content: space-between; gap: 8px 14px; padding-top: 9px; padding-bottom: 9px; }
+  .unified-nav { order: 2; width: 100%; overflow-x: auto; justify-content: flex-start; gap: 0; padding-bottom: 2px; scrollbar-width: thin; }
+  .unified-nav a { white-space: nowrap; padding: 10px 12px; }
+}
+@media (max-width: 600px) {
+  .unified-topbar { font-size: 11px; padding: 7px 0; }
+  .unified-topbar .topbar-inner span:last-child { display: none; }
+  .unified-header-inner { min-height: auto; }
+  .unified-header-inner .brand { gap: 7px; }
+  .unified-header-inner .brand-logo { width: 132px; }
+  .unified-header-inner .brand-tagline { display: none; }
+  .unified-nav { font-size: 12px; }
+  .unified-nav a { padding: 9px 11px; }
+}
