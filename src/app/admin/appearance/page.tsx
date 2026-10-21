@@ -5,7 +5,7 @@ type Settings=typeof defaults;
 function AppearanceForm(){const [v,setV]=useState<Settings>(defaults);const [loading,setLoading]=useState(true);const [saving,setSaving]=useState(false);const [message,setMessage]=useState("");const [error,setError]=useState("");
 useEffect(()=>{(async()=>{try{const s=createClient();const {data,error}=await s.from("site_settings").select("*").eq("id",1).single();if(error)throw error;if(data){
   const normalized = {...data};
-  if (/^updated\s*rojgar$/i.test(String(normalized.brand_name||"").trim())) normalized.brand_name = "Rojgar Sathi";
+  if (/^updated\s*rojgar$/i.test(String(normalized.brand_name||"").trim())) { normalized.brand_name = "Rojgar Sathi"; normalized.logo_url = "/rojgar-sathi-logo.svg"; }
   if (/^updated\s*rojgar$/i.test(String(normalized.splash_title||"").trim())) normalized.splash_title = "Rojgar Sathi";
   if (/^updated\s*rojgar\b/i.test(String(normalized.seo_title||"").trim())) normalized.seo_title = String(normalized.seo_title).replace(/^updated\s*rojgar/i,"Rojgar Sathi");
   setV((p:any)=>({...p,...normalized}));
