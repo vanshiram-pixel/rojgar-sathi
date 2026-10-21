@@ -1,6 +1,6 @@
-# Updated Rojgar
+# Rojgar Sathi
 
-A separate Hindi-first jobs and careers platform built with Next.js + Supabase. Branding, theme, home layout, navigation, splash/PWA assets, SEO settings and ad slots are managed from the admin panel—no code edits for normal content/design changes.
+Rojgar Sathi is a Hindi-first jobs and careers platform built with Next.js + Supabase. Branding, theme, home layout, navigation, splash/PWA assets, SEO settings and ad slots are managed from the admin panel—no code edits for normal content/design changes.
 
 ## Run locally
 1. Install Node.js 20 or newer.
