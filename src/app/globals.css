@@ -55,3 +55,11 @@ html[data-layout="compact"] .portal-hero{padding:20px}html[data-layout="compact"
 .dashboard-latest-vacancies{margin:22px 0;padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--card);min-width:0}.dashboard-latest-vacancies .user-panel-heading{margin-bottom:16px}.dashboard-latest-vacancies .vacancy-table th{white-space:normal}.dashboard-latest-vacancies .vacancy-table td{padding:12px 10px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:850px){.vacancy-table th,.vacancy-table td{padding:11px 9px}.vacancy-table{min-width:850px}.vacancy-count{min-width:90px}}
 @media(max-width:650px){.vacancy-page-heading{align-items:flex-start}.vacancy-count{min-width:75px;padding:10px}.vacancy-count strong{font-size:21px}.vacancy-count span{font-size:10px}.vacancy-toolbar{align-items:flex-start;flex-direction:column}.vacancy-view-switch{align-self:stretch}.vacancy-view-switch a{flex:1;text-align:center}.vacancy-table-scroll{display:none}.vacancy-mobile-list{display:block}.dashboard-latest-vacancies{padding:13px;margin:18px 0}.dashboard-latest-vacancies .user-panel-heading{align-items:flex-start;gap:10px}.dashboard-latest-vacancies .user-panel-heading>div{min-width:0}.dashboard-latest-vacancies .user-panel-heading h2{font-size:18px}.dashboard-latest-vacancies .user-text-button{white-space:nowrap}}
+
+/* Compact responsive AdSense placements; actual ad formats are chosen by Google */
+.adsense-slot{display:block;width:100%;max-width:100%;margin:18px auto;overflow:hidden;text-align:center;clear:both}
+.adsense-slot ins.adsbygoogle{display:block;width:100%;max-width:100%;min-width:0}
+.adsense-slot-compact{max-width:970px;margin:12px auto;padding:6px 0}
+.vacancy-inline-ad{width:100%;margin:12px auto 18px;min-height:0}
+.vacancy-inline-ad:empty{display:none}
+@media(max-width:600px){.adsense-slot{margin:12px auto}.adsense-slot-compact{margin:8px auto;padding:3px 0}.vacancy-inline-ad{margin:8px auto 12px}}
