@@ -27,3 +27,56 @@ body:has(#site-header) header.header:not(#site-header) {
   .unified-header .mobile-auth > a:not(.mobile-menu) { display: inline-flex; align-items: center; justify-content: center; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; font-weight: 700; color: var(--primary); white-space: nowrap; }
   .unified-header .mobile-auth .mobile-menu { display: none; }
 }
+
+/* Keep vacancy and content posts as clean rows, not sticker/chip cards. */
+body:has(#site-header) .job-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+body:has(#site-header) .job-grid > .job-card {
+  display: block;
+  min-width: 0;
+  padding: 16px 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+body:has(#site-header) .job-grid > .job-card:last-child { border-bottom: 0 !important; }
+body:has(#site-header) .job-grid .job-card .tag {
+  display: inline;
+  padding: 0 !important;
+  margin: 0 0 5px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  font-weight: 600;
+}
+body:has(#site-header) .job-grid .job-card h3 { margin: 6px 0; line-height: 1.45; }
+body:has(#site-header) .job-grid .job-card .job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 10px 0;
+}
+body:has(#site-header) .job-grid .job-card .job-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 0;
+}
+.auth-brand { display: inline-flex !important; align-items: center; gap: 10px; text-decoration: none; }
+.auth-brand .brand-logo { width: 145px; height: auto; object-fit: contain; }
+.auth-brand > span { font-weight: 800; color: var(--ink); }
+@media (max-width: 600px) {
+  body:has(#site-header) .job-grid > .job-card { padding: 14px 0 !important; }
+  body:has(#site-header) .job-grid .job-card .job-meta { gap: 8px 16px; }
+  .auth-brand .brand-logo { width: 120px; }
+}
