@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import "./premium.css";
+import "./shared-header.css";
 import { getSettings } from "@/lib/data";
 import { SplashScreen } from "@/components/SplashScreen";
+import { SiteHeader } from "@/components/SiteHeader";
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
@@ -30,6 +32,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       {s.custom_css ? <style dangerouslySetInnerHTML={{ __html: s.custom_css.replace(/<\/style/gi, "") }} /> : null}
       {adsenseEnabled ? <Script id="adsense-loader" async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${s.adsense_client}`} crossOrigin="anonymous" strategy="beforeInteractive" /> : null}
     </head>
-    <body style={{ fontFamily: s.font_family === "hind" ? "Hind, sans-serif" : s.font_family === "inter" ? "Inter, sans-serif" : "Inter, Hind, system-ui, sans-serif" }}><SplashScreen logoUrl={s.logo_url} splashImageUrl={s.splash_image_url} title={s.splash_title || s.brand_name} subtitle={s.splash_subtitle || s.tagline} />{children}</body>
+    <body style={{ fontFamily: s.font_family === "hind" ? "Hind, sans-serif" : s.font_family === "inter" ? "Inter, sans-serif" : "Inter, Hind, system-ui, sans-serif" }}>
+      <SplashScreen logoUrl={s.logo_url} splashImageUrl={s.splash_image_url} title={s.splash_title || s.brand_name} subtitle={s.splash_subtitle || s.tagline} />
+      <SiteHeader brandName={s.brand_name || "Rojgar Sathi"} tagline={s.tagline || "सरकारी नौकरी और करियर की सही जानकारी"} topbarText={s.topbar_text || "रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी"} />
+      {children}
+    </body>
   </html>;
 }
