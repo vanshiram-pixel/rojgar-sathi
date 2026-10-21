@@ -19,6 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/categories" aria-current={pathname.startsWith("/admin/categories") ? "page" : undefined}>श्रेणी और राज्य</Link>
           <Link href="/admin/appearance" aria-current={pathname.startsWith("/admin/appearance") ? "page" : undefined}>डिज़ाइन और लेआउट</Link>
           <Link href="/admin/seo-ads" aria-current={pathname.startsWith("/admin/seo-ads") ? "page" : undefined}>SEO और विज्ञापन</Link>
+          <Link href="/admin/notifications" aria-current={pathname.startsWith("/admin/notifications") ? "page" : undefined}>नोटिफिकेशन सिस्टम</Link>
           <Link href="/" target="_blank">सार्वजनिक वेबसाइट ↗</Link>
         </nav>
       </aside>
