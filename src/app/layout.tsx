@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     </head>
     <body style={{ fontFamily: s.font_family === "hind" ? "Hind, sans-serif" : s.font_family === "inter" ? "Inter, sans-serif" : "Inter, Hind, system-ui, sans-serif" }}>
       <SplashScreen logoUrl={s.logo_url} splashImageUrl={s.splash_image_url} title={s.splash_title || s.brand_name} subtitle={s.splash_subtitle || s.tagline} />
-      <SiteHeader brandName={s.brand_name || "Rojgar Sathi"} tagline={s.tagline || "सरकारी नौकरी और करियर की सही जानकारी"} topbarText={s.topbar_text || "रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी"} />
+      <SiteHeader brandName="Rojgar Sathi" tagline={s.tagline || "सरकारी नौकरी और करियर की सही जानकारी"} topbarText={s.topbar_text || "रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी"} />
       {children}
     </body>
   </html>;
