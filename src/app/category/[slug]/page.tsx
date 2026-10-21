@@ -148,11 +148,9 @@ export default async function Category({ params }: { params: Promise<{ slug: str
       if (level) q = q.eq("government_level", level);
       queries.push(q);
     }
-    if (category?.category_type === "department") {
-      queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("department_slug", slug).order("created_at", { ascending: false }).limit(100));
-    }
+    // content_items stores state_name, not state_slug or department_slug.
     if (category?.category_type === "state") {
-      queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("state_slug", slug).order("created_at", { ascending: false }).limit(100));
+      queries.push(supabase.from("content_items").select("*").eq("status", "published").eq("state_name", category.name).order("created_at", { ascending: false }).limit(100));
     }
     queries.push(supabase.from("content_items").select("*").eq("status", "published").contains("category_slugs", [slug]).order("created_at", { ascending: false }).limit(100));
     const results = await Promise.all(queries);
