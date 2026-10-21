@@ -17,10 +17,10 @@ export default async function StateJobsPage({ params }: { params: Promise<{ slug
   const uniqueJobs = new Map<string, any>();
   [...(tagged || []), ...(byStateSlug || []), ...(byLocation || [])].forEach((job: any) => uniqueJobs.set(job.id, job));
   const jobs = [...uniqueJobs.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-  const { data: contentBySlug } = await supabase.from("content_items").select("*").eq("status", "published").eq("state_slug", slug).order("created_at", { ascending: false }).limit(100);
+  // content_items stores state_name (not state_slug); query only columns defined by the migration.
   const { data: contentByName } = await supabase.from("content_items").select("*").eq("status", "published").eq("state_name", state.name).order("created_at", { ascending: false }).limit(100);
   const uniqueContent = new Map<string, any>();
-  [...(contentBySlug || []), ...(contentByName || [])].forEach((item: any) => uniqueContent.set(item.id, item));
+  (contentByName || []).forEach((item: any) => uniqueContent.set(item.id, item));
   const contentItems = [...uniqueContent.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   return <>
     <header className="header"><div className="wrap header-inner"><Link className="brand" href="/">रोज़गार साथी</Link><Link href="/categories" className="text-link">← सभी श्रेणियाँ</Link></div></header>
