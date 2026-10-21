@@ -32,7 +32,7 @@ export default function Register() {
     setBusy(true); setError(""); setMsg("");
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", queryParams: { access_type: "offline", prompt: "select_account" } } });
+      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", queryParams: { access_type: "offline" } } });
       if (error) throw error;
     } catch (err) { setError(friendlyRegisterError(err)); setBusy(false); }
   }
@@ -100,7 +100,7 @@ export default function Register() {
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
         {msg && <div className="notice" role="status" aria-live="polite">{msg}</div>}
         {pendingEmail && msg && <button type="button" className="btn" onClick={resendVerification} disabled={resending}>{resending ? "लिंक भेजी जा रही है…" : "सत्यापन ईमेल दोबारा भेजें"}</button>}
-        <button type="button" className="btn" onClick={googleRegister} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से रजिस्टर / लॉगिन करें"}</button>
+        <button type="button" className="btn" onClick={googleRegister} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से जारी रखें"}</button>
         <div className="sub" style={{textAlign:"center",margin:"12px 0"}}>या ईमेल और पासवर्ड से अकाउंट बनाएँ</div>
         <label className="field">पूरा नाम
           <input value={name} onChange={e => setName(e.target.value)} required autoComplete="name" />
