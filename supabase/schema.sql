@@ -9,7 +9,7 @@ create table if not exists public.site_settings (
   id integer primary key default 1 check (id = 1),
   brand_name text not null default 'Rojgar Sathi',
   tagline text not null default 'सरकारी नौकरी और करियर की सही जानकारी',
-  logo_url text not null default '',
+  logo_url text not null default '/rojgar-sathi-logo.svg',
   favicon_url text not null default '',
   splash_image_url text not null default '',
   splash_title text not null default 'Rojgar Sathi',
