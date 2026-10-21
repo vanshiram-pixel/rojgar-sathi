@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
@@ -29,8 +29,12 @@ export default function Login() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [adminAccessRequired, setAdminAccessRequired] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    setAdminAccessRequired(new URLSearchParams(window.location.search).get("error") === "admin-access-required");
+  }, []);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -74,7 +78,7 @@ export default function Login() {
         <Link className="brand" href="/"><span className="brand-mark">UR</span>Updated Rojgar</Link>
         <h1>Admin Login</h1>
         <p className="sub">वेबसाइट और ऐप की सेटिंग प्रबंधित करें।</p>
-        {new URLSearchParams(window.location.search).get("error") === "admin-access-required" && <div className="notice error" role="alert">इस खाते को एडमिन अनुमति नहीं है।</div>}
+        {adminAccessRequired && <div className="notice error" role="alert">इस खाते को एडमिन अनुमति नहीं है।</div>}
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
         {notice && <div className="notice" role="status" aria-live="polite">{notice}</div>}
         <label className="field">ईमेल
