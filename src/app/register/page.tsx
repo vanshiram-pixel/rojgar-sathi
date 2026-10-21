@@ -42,7 +42,7 @@ export default function Register() {
     setResending(true); setError(""); setMsg("");
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/" } });
+      const { error } = await supabase.auth.resend({ type: "signup", email: pendingEmail, options: { emailRedirectTo: window.location.origin + "/auth/callback?next=/profile" } });
       if (error) throw error;
       setMsg("यदि इस ईमेल के लिए सत्यापन दोबारा भेजना उपलब्ध है, तो अनुरोध स्वीकार हुआ। इनबॉक्स और Spam/Junk फ़ोल्डर जाँचें।");
     } catch (err) { setError(friendlyRegisterError(err)); }
@@ -62,7 +62,7 @@ export default function Register() {
         password,
         options: {
           data: { full_name: name.trim() },
-          emailRedirectTo: window.location.origin + "/auth/callback?next=/",
+          emailRedirectTo: window.location.origin + "/auth/callback?next=/profile",
         },
       });
       if (signUpError) throw signUpError;
@@ -83,7 +83,7 @@ export default function Register() {
       }
 
       setPendingEmail(email.trim());
-      setMsg("रजिस्ट्रेशन अनुरोध स्वीकार हुआ। अपना ईमेल इनबॉक्स और Spam/Junk फ़ोल्डर खोलें। Rojgar Sathi की सत्यापन लिंक पर क्लिक करना ज़रूरी है। सत्यापन पूरा होने पर वेबसाइट का होम पेज खुलेगा; फिर लॉगिन करके प्रोफाइल/डैशबोर्ड देख सकते हैं।")
+      setMsg("रजिस्ट्रेशन अनुरोध स्वीकार हुआ। अपना ईमेल इनबॉक्स और Spam/Junk फ़ोल्डर खोलें। Rojgar Sathi की सत्यापन लिंक पर क्लिक करना ज़रूरी है। सत्यापन पूरा होते ही आपका प्रोफाइल डैशबोर्ड खुलेगा। यदि सत्यापन के बाद लॉगिन माँगा जाए, तो उसी ईमेल और पासवर्ड से लॉगिन करें।")
     } catch (err) {
       setError(friendlyRegisterError(err));
     } finally {
@@ -94,7 +94,7 @@ export default function Register() {
   return (
     <main className="admin-login">
       <form className="login-card" onSubmit={submit}>
-        <Link className="brand" href="/">Rojgar Sathi</Link>
+        <Link className="brand auth-brand" href="/"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi लोगो" /><span>Rojgar Sathi</span></Link>
         <h1>यूज़र अकाउंट बनाएँ</h1>
         <p className="sub">अपनी पसंद की भर्ती और अपडेट पाने के लिए पंजीकरण करें।</p>
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
