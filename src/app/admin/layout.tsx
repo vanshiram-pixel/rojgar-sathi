@@ -1,6 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  // Login must be a clean, standalone screen; never render the protected admin shell around it.
+  if (pathname === "/admin/login") return <>{children}</>;
   return (
     <div className="admin-shell">
       <aside className="admin-side">
