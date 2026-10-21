@@ -1,16 +1,73 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, UserRound } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 type Props = { brandName: string; tagline: string; topbarText: string };
+type SignedInUser = { id: string; email?: string; name: string };
 
 export function SiteHeader({ tagline, topbarText }: Props) {
   const pathname = usePathname() || "/";
+  const [signedInUser, setSignedInUser] = useState<SignedInUser | null>(null);
+  const [authReady, setAuthReady] = useState(false);
   const canonicalBrand = "Rojgar Sathi";
+
+  useEffect(() => {
+    const supabase = createClient();
+    let alive = true;
+
+    const loadUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!alive) return;
+      if (!user) {
+        setSignedInUser(null);
+        setAuthReady(true);
+        return;
+      }
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("full_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (!alive) return;
+      const metadataName = typeof user.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "";
+      const emailName = user.email?.split("@")[0] || "यूज़र";
+      setSignedInUser({
+        id: user.id,
+        email: user.email || "",
+        name: profile?.full_name?.trim() || metadataName.trim() || emailName,
+      });
+      setAuthReady(true);
+    };
+
+    void loadUser();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      // Defer Supabase queries until after the auth callback completes.
+      setTimeout(() => { if (alive) void loadUser(); }, 0);
+    });
+    return () => {
+      alive = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
   // Keep the separate, private Admin navigation intact.
   if (pathname.startsWith("/admin")) return null;
+
+  const accountControl = signedInUser ? (
+    <Link className="account-link signed-in-account" href="/profile" aria-label={signedInUser.name + " की प्रोफाइल"}>
+      <span className="account-avatar" aria-hidden="true"><UserRound size={18} /></span>
+      <span className="account-name">{signedInUser.name}</span>
+    </Link>
+  ) : (
+    <Link className="account-link" href="/login">
+      <span className="account-avatar" aria-hidden="true"><UserRound size={18} /></span>
+      <span className="account-name">{authReady ? "लॉगिन / अकाउंट" : "अकाउंट"}</span>
+    </Link>
+  );
 
   return (
     <div id="site-header-shell">
@@ -33,10 +90,10 @@ export function SiteHeader({ tagline, topbarText }: Props) {
             <Link href="/category/result">Results</Link>
             <Link href="/category/scholarship">Scholarships</Link>
             <Link href="/category/government-schemes">Schemes</Link>
-            <Link href="/login">लॉगिन / अकाउंट</Link>
+            {accountControl}
           </nav>
           <div className="mobile-auth">
-            <Link href="/login">लॉगिन / अकाउंट</Link>
+            {accountControl}
             <Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link>
           </div>
         </div>
