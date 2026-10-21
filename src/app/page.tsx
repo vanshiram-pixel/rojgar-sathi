@@ -60,7 +60,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
     }
   } catch {}
 
-  const nav = settings.navigation || [];
   return <>
     <div className="topbar"><div className="wrap topbar-inner"><span>{settings.topbar_text || "रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी"}</span><span><ShieldCheck size={13} /> आवेदन से पहले आधिकारिक सूचना जाँचें</span></div></div>
     <header className="header"><div className="wrap header-inner">
