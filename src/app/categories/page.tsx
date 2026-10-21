@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getSettings } from "@/lib/data";
+import { AdSlot } from "@/components/AdSlot";
 
 export const revalidate = 60;
 
@@ -17,6 +19,7 @@ const groups: { type: string; title: string; description: string }[] = [
 ];
 
 export default async function CategoriesPage() {
+  const settings = await getSettings();
   let categories: Category[] = [];
   try {
     const supabase = await createClient();
@@ -29,6 +32,7 @@ export default async function CategoriesPage() {
     <main className="wrap page">
       <h1 className="page-title">सभी श्रेणियाँ और राज्यवार भर्ती</h1>
       <p className="sub">केंद्र सरकार, सभी राज्य/केंद्रशासित प्रदेश, शिक्षा, परीक्षा, छात्रवृत्ति और योजनाओं की श्रेणियाँ। आवेदन से पहले संबंधित विभाग की आधिकारिक अधिसूचना अवश्य पढ़ें।</p>
+      <div className="portal-ad portal-ad-inline"><AdSlot enabled={settings.ads_enabled} client={settings.adsense_client} slot={settings.ad_slot_home} compact label="श्रेणियों के ऊपर विज्ञापन"/></div>
       {categories.length === 0 ? <div className="empty">श्रेणियाँ अभी सेट नहीं हैं। व्यवस्थापक से Supabase में पोर्टल श्रेणी माइग्रेशन चलाने को कहें।</div> : groups.map((group) => {
         const items = categories.filter((item) => item.category_type === group.type);
         if (!items.length) return null;
@@ -37,6 +41,7 @@ export default async function CategoriesPage() {
           <div className="category-directory-grid">{items.map((item) => <Link className="directory-card" key={item.id} href={item.category_type === "state" ? `/state/${item.slug}` : `/category/${item.slug}`}><strong>{item.name}</strong><span>{item.description}</span><small>अपडेट देखें →</small></Link>)}</div>
         </section>;
       })}
+      <div className="portal-ad portal-ad-inline"><AdSlot enabled={settings.ads_enabled} client={settings.adsense_client} slot={settings.ad_slot_home} compact label="श्रेणियों के नीचे विज्ञापन"/></div>
     </main>
   </>;
 }
