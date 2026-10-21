@@ -69,7 +69,7 @@ export default function Register() {
 
       if (data.session && data.user) {
         const { error: profileError } = await supabase.from("user_profiles").upsert(
-          { user_id: data.user.id, full_name: name.trim() },
+          { user_id: data.user.id, email: data.user.email || email.trim(), full_name: name.trim() },
           { onConflict: "user_id" },
         );
         if (profileError) {
