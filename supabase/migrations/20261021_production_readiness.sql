@@ -1,4 +1,4 @@
--- Production readiness migration for Updated Rojgar.
+-- Production readiness migration for Rojgar Sathi.
 -- Run AFTER supabase/schema.sql in the Supabase SQL Editor.
 -- Safe to re-run: columns, tables, policies and buckets use IF NOT EXISTS / DROP POLICY IF EXISTS.
 
