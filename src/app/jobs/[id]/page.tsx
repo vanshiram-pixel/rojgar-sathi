@@ -107,6 +107,7 @@ export default async function JobDetail({ params }: PageProps) {
               <div className="detail-item" key={label}><small>{label}</small><strong>{value}</strong></div>
             ))}
           </div>
+          <div className="detail-ad-block"><AdSlot enabled={settings?.ads_enabled || false} client={settings?.adsense_client || ""} slot={settings?.ad_slot_job || ""} compact label="भर्ती की मुख्य जानकारी के बाद विज्ञापन"/></div>
           <h2>भर्ती का विवरण</h2>
           <p style={{ whiteSpace: "pre-wrap" }}>{job.description || "विस्तृत जानकारी के लिए आधिकारिक अधिसूचना देखें।"}</p>
           {job.official_source ? <p><strong>आधिकारिक स्रोत: </strong>{job.official_source}</p> : null}
@@ -116,6 +117,7 @@ export default async function JobDetail({ params }: PageProps) {
             {job.apply_url ? <a className="btn" href={job.apply_url} target="_blank" rel="noopener noreferrer">आवेदन करें ↗</a> : null}
           </div>
           <p className="sub">महत्वपूर्ण: आवेदन से पहले विभाग की आधिकारिक अधिसूचना से पात्रता, तारीख, शुल्क और अन्य शर्तों की पुष्टि करें। यह पृष्ठ जानकारी के लिए है; भर्ती की शर्तें संबंधित विभाग की अधिसूचना के अनुसार मान्य होंगी।</p>
+          <div className="detail-ad-block"><AdSlot enabled={settings?.ads_enabled || false} client={settings?.adsense_client || ""} slot={settings?.ad_slot_job || ""} compact label="आवेदन लिंक के बाद विज्ञापन"/></div>
         </article>
         <AdSlot enabled={settings?.ads_enabled || false} client={settings?.adsense_client || ""} slot={settings?.ad_slot_job || ""} />
       </main>
