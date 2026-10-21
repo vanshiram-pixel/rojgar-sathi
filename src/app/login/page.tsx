@@ -34,8 +34,30 @@ export default function Login() {
   const [busy, setBusy] = useState(false);
   const router = useRouter();
 
+  async function googleLogin() {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const supabase = createClient();
+      const next = new URLSearchParams(window.location.search).get("next");
+      const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/admin") ? next : "/profile";
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin + "/auth/callback?next=" + encodeURIComponent(safeNext),
+          queryParams: { access_type: "offline", prompt: "select_account" },
+        },
+      });
+      if (error) throw error;
+    } catch (err) {
+      setError(friendlyLoginError(err));
+      setBusy(false);
+    }
+  }
 
-  async function googleLogin() {\n    if (busy) return;\n    setBusy(true); setError(""); setNotice("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", scopes: "openid email profile" } });\n      if (error) throw error;\n    } catch (err) { setError(friendlyLoginError(err)); setBusy(false); }\n  }\n\n  async function googleLogin() {\n    if (busy) return;\n    setBusy(true); setError(""); setNotice("");\n    try {\n      const supabase = createClient();\n      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=/profile", scopes: "openid email profile" } });\n      if (error) throw error;\n    } catch (err) { setError(friendlyLoginError(err)); setBusy(false); }\n  }\n\n  async function googleLogin() {\n    if (busy) return;\n    setBusy(true); setError(""); setNotice("");\n    try {\n      const supabase = createClient();\n      const next = new URLSearchParams(window.location.search).get("next");\n      const safeNext = next && next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/admin") ? next : "/profile";\n      const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/auth/callback?next=" + encodeURIComponent(safeNext), queryParams: { access_type: "offline", prompt: "select_account" } } });\n      if (error) throw error;\n    } catch (err) { setError(friendlyLoginError(err)); setBusy(false); }\n  }\n\n  async function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (busy) return;
     setBusy(true);
@@ -70,7 +92,9 @@ export default function Login() {
         <p className="sub">अपनी प्रोफाइल और पसंदीदा अपडेट खोलें।</p>
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
         {notice && <div className="notice" role="status" aria-live="polite">{notice}</div>}
-        <button type="button" className="btn" onClick={googleLogin} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से जारी रखें"}</button>\n        <div className="sub" style={{ textAlign: "center", margin: "12px 0" }}>या ईमेल से लॉगिन करें</div>\n        <button type="button" className="btn" onClick={googleLogin} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से जारी रखें"}</button>\n        <div className="sub" style={{ textAlign: "center", margin: "12px 0" }}>या ईमेल से लॉगिन करें</div>\n        <button type="button" className="btn" onClick={googleLogin} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से जारी रखें"}</button>\n        <div className="sub" style={{textAlign:"center",margin:"12px 0"}}>या ईमेल से लॉगिन करें</div>\n        <label className="field">ईमेल
+        <button type="button" className="btn" onClick={googleLogin} disabled={busy}>{busy ? "कृपया प्रतीक्षा करें…" : "Google से जारी रखें"}</button>
+        <div className="sub" style={{ textAlign: "center", margin: "12px 0" }}>या ईमेल से लॉगिन करें</div>
+        <label className="field">ईमेल
           <input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="username" />
         </label>
         <label className="field">पासवर्ड
