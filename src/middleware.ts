@@ -1,11 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-function safeNext(value: string | null, fallback = "/profile") {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.startsWith("/\\\\") || value.includes("\\r") || value.includes("\\n")) return fallback;
-  return value;
-}
-
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   // OAuth/email callback must exchange its one-time code before any dashboard redirect.
