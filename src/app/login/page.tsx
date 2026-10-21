@@ -87,7 +87,7 @@ export default function Login() {
   return (
     <main className="admin-login">
       <form className="login-card" onSubmit={submit}>
-        <Link className="brand auth-brand" href="/"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi लोगो" /><span>Rojgar Sathi</span></Link>
+        <Link className="brand auth-brand" href="/" aria-label="Rojgar Sathi होम"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi लोगो" /></Link>
         <h1>यूज़र लॉगिन</h1>
         <p className="sub">अपनी प्रोफाइल और पसंदीदा अपडेट खोलें।</p>
         {error && <div className="notice error" role="alert" aria-live="polite">{error}</div>}
