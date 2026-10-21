@@ -16,7 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
     manifest: "/manifest.webmanifest",
     icons: { icon: s.favicon_url || "/icon.svg", apple: s.favicon_url || "/icon.svg" },
     openGraph: { title: s.seo_title || s.brand_name, description: s.seo_description, type: "website", siteName: s.brand_name || "Rojgar Sathi" },
-    robots: { index: true, follow: true }
+    robots: { index: true, follow: true },
+    verification: { google: "52wMQP49X8SPYTnp7hcnP4Xc6BPsKEz9GkXXfwYMH2U" }
   };
 }
 
