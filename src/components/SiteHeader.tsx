@@ -8,6 +8,7 @@ type Props = { brandName: string; tagline: string; topbarText: string };
 
 export function SiteHeader({ brandName, tagline, topbarText }: Props) {
   const pathname = usePathname() || "/";
+  const canonicalBrand = "Rojgar Sathi";
   // Keep the separate, private Admin navigation intact.
   if (pathname.startsWith("/admin")) return null;
 
@@ -21,8 +22,8 @@ export function SiteHeader({ brandName, tagline, topbarText }: Props) {
       </div>
       <header id="site-header" className="header unified-header">
         <div className="wrap header-inner unified-header-inner">
-          <Link className="brand" href="/" aria-label={brandName + " होम"}>
-            <img className="brand-logo" src="/rojgar-sathi-logo.svg" alt={brandName + " लोगो"} />
+          <Link className="brand" href="/" aria-label={canonicalBrand + " होम"}>
+            <img className="brand-logo" src="/rojgar-sathi-logo.svg" alt={canonicalBrand + " लोगो"} />
             <span className="brand-tagline">{tagline || "सरकारी नौकरी और करियर की सही जानकारी"}</span>
           </Link>
           <nav className="nav unified-nav" aria-label="मुख्य नेविगेशन">
