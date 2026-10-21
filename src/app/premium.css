@@ -46,3 +46,78 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 @media(max-width:760px){.admin-shell{display:block}.admin-side{position:relative;height:auto;padding:14px 14px 12px;overflow:visible}.admin-side .brand{padding:0 4px 13px;margin-bottom:12px}.admin-nav{display:flex;flex-direction:row;overflow-x:auto;padding:2px 0 5px;gap:7px}.admin-nav a{flex:0 0 auto;min-height:38px;padding:10px 12px;white-space:nowrap;border-radius:10px}.admin-nav a:before{display:none}.admin-main{padding:22px 15px 40px}.admin-head{align-items:flex-start}.admin-card{padding:18px}.portal-intro{align-items:flex-start}.portal-trust{min-width:220px}.wrap{width:calc(100% - 30px)}}
 @media(max-width:600px){.portal-hero{padding:34px 0 20px}.portal-intro h1{font-size:34px;letter-spacing:-1.1px}.portal-intro p{font-size:14px}.portal-trust{display:grid;margin-top:20px;max-width:none}.portal-shortcuts a{border-radius:12px}.section{padding:30px 0}.job-card,.department-card,.update-card,.directory-card{border-radius:15px}.page{padding-top:30px}.admin-head{gap:12px}.admin-head h1{font-size:26px}.login-card{padding:26px 21px}.footer{padding:32px 0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Honor the saved appearance presets instead of only storing them. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --rs-ink: #e7edf8;
+  --rs-muted: #a5b2c8;
+  --rs-line: #2b3850;
+  --rs-paper: #111c2f;
+  --rs-wash: #0b1220;
+  --ink: #e7edf8;
+  --muted: #a5b2c8;
+  --card: #111c2f;
+  --line: #2b3850;
+  --page-bg: #0b1220;
+  background: var(--rs-wash);
+  color: var(--rs-ink);
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] .admin-shell,
+html[data-theme="dark"] .admin-main { background: var(--rs-wash); color: var(--rs-ink); }
+html[data-theme="dark"] .header,
+html[data-theme="dark"] .job-card,
+html[data-theme="dark"] .detail,
+html[data-theme="dark"] .category,
+html[data-theme="dark"] .directory-card,
+html[data-theme="dark"] .department-card,
+html[data-theme="dark"] .update-card,
+html[data-theme="dark"] .searchbar,
+html[data-theme="dark"] .admin-card,
+html[data-theme="dark"] .empty,
+html[data-theme="dark"] .user-panel,
+html[data-theme="dark"] .user-stat-card {
+  background: #111c2f;
+  color: #e7edf8;
+  border-color: #2b3850;
+}
+html[data-theme="dark"] .portal-hero,
+html[data-theme="dark"] .qualification-list a,
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field textarea,
+html[data-theme="dark"] .field select {
+  background: #17243a;
+  color: #e7edf8;
+  border-color: #34435d;
+}
+html[data-theme="dark"] .detail p,
+html[data-theme="dark"] .portal-intro p,
+html[data-theme="dark"] .sub,
+html[data-theme="dark"] .admin-card p { color: #a5b2c8; }
+html[data-theme="dark"] .admin-table,
+html[data-theme="dark"] .admin-table td,
+html[data-theme="dark"] .admin-table th { background: #111c2f; color: #e7edf8; border-color: #2b3850; }
+html[data-theme="dark"] .admin-table th { background: #1a2941; }
+html[data-theme="dark"] .small-btn { background: #17243a; color: #e7edf8; border-color: #34435d; }
+html[data-theme="dark"] .portal-hero { background: radial-gradient(ellipse at 88% 12%,rgba(104,139,255,.12),transparent 32%),linear-gradient(145deg,#101b30,#0b1220); }
+html[data-layout="compact"] .section { padding-top: 28px; padding-bottom: 28px; }
+html[data-layout="compact"] .job-card,
+html[data-layout="compact"] .department-card,
+html[data-layout="compact"] .update-card,
+html[data-layout="compact"] .directory-card { padding: 15px; border-radius: 12px; }
+html[data-layout="compact"] .portal-hero { padding-top: 30px; padding-bottom: 18px; }
+html[data-layout="editorial"] .job-grid,
+html[data-layout="editorial"] .department-grid,
+html[data-layout="editorial"] .update-grid { gap: 22px; }
+html[data-layout="editorial"] .job-card,
+html[data-layout="editorial"] .detail,
+html[data-layout="editorial"] .update-card { border-radius: 8px; box-shadow: none; }
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] { color-scheme: dark; --rs-ink:#e7edf8; --rs-muted:#a5b2c8; --rs-line:#2b3850; --rs-paper:#111c2f; --rs-wash:#0b1220; --ink:#e7edf8; --muted:#a5b2c8; --card:#111c2f; --line:#2b3850; --page-bg:#0b1220; background:var(--rs-wash); color:var(--rs-ink); }
+  html[data-theme="system"] body, html[data-theme="system"] .admin-shell, html[data-theme="system"] .admin-main { background:var(--rs-wash); color:var(--rs-ink); }
+  html[data-theme="system"] .header, html[data-theme="system"] .job-card, html[data-theme="system"] .detail, html[data-theme="system"] .category, html[data-theme="system"] .directory-card, html[data-theme="system"] .department-card, html[data-theme="system"] .update-card, html[data-theme="system"] .searchbar, html[data-theme="system"] .admin-card, html[data-theme="system"] .empty, html[data-theme="system"] .user-panel, html[data-theme="system"] .user-stat-card { background:#111c2f; color:#e7edf8; border-color:#2b3850; }
+  html[data-theme="system"] .portal-hero, html[data-theme="system"] .qualification-list a, html[data-theme="system"] .field input, html[data-theme="system"] .field textarea, html[data-theme="system"] .field select { background:#17243a; color:#e7edf8; border-color:#34435d; }
+  html[data-theme="system"] .detail p, html[data-theme="system"] .portal-intro p, html[data-theme="system"] .sub, html[data-theme="system"] .admin-card p { color:#a5b2c8; }
+}
