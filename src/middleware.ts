@@ -9,7 +9,6 @@ export async function middleware(request: NextRequest) {
   const isAdminLogin = pathname === "/admin/login";
   const isAdminArea = pathname.startsWith("/admin") && !isAdminLogin;
   const isProfile = pathname === "/profile" || pathname.startsWith("/profile/");
-  const isHome = pathname === "/";
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -57,8 +56,8 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // An active user session always resumes the private dashboard from home/auth pages.
-  if (isHome || isAuthPage) return redirectWithCookies("/profile");
+  // Keep the public homepage public. Only redirect authenticated users away from sign-in pages.
+  if (isAuthPage) return redirectWithCookies("/profile");
 
   if (isAdminLogin) {
     const { data: admin, error: adminError } = await supabase
