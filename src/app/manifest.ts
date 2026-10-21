@@ -17,7 +17,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
         src: settings.favicon_url || "/icon.svg",
         sizes: "any",
         type: "image/svg+xml",
-        purpose: "any maskable",
+        purpose: "maskable",
       },
     ],
   };
