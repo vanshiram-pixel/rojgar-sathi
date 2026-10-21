@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BellRing, Mail, MessageCircle, Smartphone, CheckCircle2 } from "lucide-react";
 
 export function NotificationCenter() {
+  const [promptOpen, setPromptOpen] = useState(false);
+  useEffect(() => { const id = window.setTimeout(() => setPromptOpen(true), 1400); return () => window.clearTimeout(id); }, []);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [emailOn, setEmailOn] = useState(true);
@@ -39,7 +41,7 @@ export function NotificationCenter() {
     finally { setBusy(false); }
   }
 
-  return <section className="section"><div className="wrap"><div className="admin-card notification-center" id="notifications">
+  return <>{promptOpen && <aside role="dialog" aria-label="नौकरी नोटिफिकेशन" style={{position:"fixed",right:16,bottom:84,zIndex:80,width:"min(350px,calc(100vw - 32px))",background:"var(--card,#fff)",color:"var(--text,#172033)",border:"1px solid var(--line,#dbe2ea)",borderRadius:14,boxShadow:"0 12px 40px rgba(15,23,42,.18)",padding:16}}><button type="button" aria-label="बंद करें" onClick={()=>setPromptOpen(false)} style={{float:"right",border:0,background:"transparent",fontSize:20,cursor:"pointer"}}>×</button><h3 style={{margin:"0 24px 8px 0"}}><BellRing size={18} style={{display:"inline",verticalAlign:"middle",marginRight:7}}/>नई भर्ती का अलर्ट पाएँ</h3><p className="sub" style={{margin:"0 0 12px"}}>ईमेल, WhatsApp या ब्राउज़र नोटिफिकेशन चुनें। कोई लॉगिन जरूरी नहीं।</p><button type="button" className="btn" onClick={()=>{setPromptOpen(false);document.getElementById("notifications")?.scrollIntoView({behavior:"smooth",block:"center"});}}>अलर्ट सेट करें</button></aside>}<section className="section"><div className="wrap"><div className="admin-card notification-center" id="notifications">
     <div className="section-head"><div><h2><BellRing size={22} style={{display:"inline",verticalAlign:"middle",marginRight:8}}/>नौकरी अलर्ट पाएँ</h2><p className="sub">लॉगिन या अकाउंट बनाने की जरूरत नहीं। अपनी पसंद के अलर्ट चुनें।</p></div></div>
     <form onSubmit={save} className="notification-form">
       <label className="checkline"><input type="checkbox" checked={emailOn} onChange={e=>setEmailOn(e.target.checked)}/><Mail size={17}/> ईमेल नोटिफिकेशन</label>
@@ -53,5 +55,5 @@ export function NotificationCenter() {
       {notice && <p role="status" className="notice">{notice}</p>}{error && <p role="alert" className="notice error">{error}</p>}
       <small className="sub">सेव करके आप चुने गए चैनलों पर नौकरी/परीक्षा अपडेट पाने की सहमति देते हैं। किसी भी समय सदस्यता बंद करने का विकल्प उपलब्ध कराया जाएगा।</small>
     </form>
-  </div></div></section>;
+  </div></div></section></>;
 }
