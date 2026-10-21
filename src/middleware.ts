@@ -5,7 +5,8 @@ export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const isAdminArea = pathname.startsWith("/admin") && pathname !== "/admin/login";
   const isProfile = pathname === "/profile" || pathname.startsWith("/profile/");
-  if (!isAdminArea && !isProfile) return NextResponse.next();
+  const isHome = pathname === "/";
+  const isAuthPage = pathname === "/login" || pathname === "/register";
 
   let response = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -41,8 +42,16 @@ export async function middleware(request: NextRequest) {
   };
 
   if (error || !user) {
-    const next = encodeURIComponent(pathname + search);
-    return redirectWithCookies(isAdminArea ? "/admin/login" : "/login", `next=${next}`);
+    if (isAdminArea || isProfile) {
+      const next = encodeURIComponent(pathname + search);
+      return redirectWithCookies(isAdminArea ? "/admin/login" : "/login", `next=${next}`);
+    }
+    return response;
+  }
+
+  // Keep signed-in users in their private dashboard instead of showing the public homepage or login/register forms.
+  if (isHome || isAuthPage) {
+    return redirectWithCookies("/profile");
   }
 
   if (isAdminArea) {
@@ -60,5 +69,15 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/profile/:path*"],
+  matcher: [
+    "/",
+    "/login",
+    "/register",
+    "/admin/:path*",
+    "/profile/:path*",
+    "/jobs/:path*",
+    "/categories/:path*",
+    "/category/:path*",
+    "/search/:path*",
+  ],
 };
