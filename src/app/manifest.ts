@@ -3,7 +3,7 @@ import { getSettings } from "@/lib/data";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const settings = await getSettings();
-  const brand = settings.brand_name || "Updated Rojgar";
+  const brand = settings.brand_name || "Rojgar Sathi";
   return {
     name: brand,
     short_name: brand.slice(0, 12),
