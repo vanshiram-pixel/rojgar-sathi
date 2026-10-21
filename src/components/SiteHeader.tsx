@@ -26,7 +26,6 @@ export function SiteHeader({ brandName, tagline, topbarText }: Props) {
             <span className="brand-tagline">{tagline || "सरकारी नौकरी और करियर की सही जानकारी"}</span>
           </Link>
           <nav className="nav unified-nav" aria-label="मुख्य नेविगेशन">
-            <Link href="/">होम</Link>
             <Link href="/jobs">Latest Jobs</Link>
             <Link href="/categories">विभाग व श्रेणियाँ</Link>
             <Link href="/category/admit-card">Admit Card</Link>
@@ -35,6 +34,10 @@ export function SiteHeader({ brandName, tagline, topbarText }: Props) {
             <Link href="/category/government-schemes">Schemes</Link>
             <Link href="/login">लॉगिन / अकाउंट</Link>
           </nav>
+          <div className="mobile-auth">
+            <Link href="/login">लॉगिन / अकाउंट</Link>
+            <Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link>
+          </div>
         </div>
       </header>
     </div>
