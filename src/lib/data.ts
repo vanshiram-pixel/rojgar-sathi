@@ -12,14 +12,14 @@ export type SiteSettings = {
   topbar_text: string; footer_text: string; header_style: string; footer_style: string; custom_css: string;
 };
 export const defaultSettings: SiteSettings = {
-  brand_name:"Updated Rojgar", tagline:"सरकारी नौकरी और करियर की सही जानकारी", logo_url:"", favicon_url:"",
-  splash_image_url:"", splash_title:"Updated Rojgar", splash_subtitle:"आपके भविष्य की सही शुरुआत",
+  brand_name:"Rojgar Sathi", tagline:"सरकारी नौकरी और करियर की सही जानकारी", logo_url:"", favicon_url:"",
+  splash_image_url:"", splash_title:"Rojgar Sathi", splash_subtitle:"आपके भविष्य की सही शुरुआत",
   primary_color:"#155eef", accent_color:"#12b981", background_color:"#f5f7fb", theme_mode:"light",
   font_family:"system", layout_preset:"modern", home_hero_title:"अपनी अगली नौकरी यहाँ खोजें",
   home_hero_subtitle:"सरकारी भर्ती, एडमिट कार्ड, रिजल्ट और छात्रवृत्ति अपडेट",
   show_latest_jobs:true, show_admission:true, show_scholarships:true, show_schemes:true,
   navigation:[{label:"सरकारी नौकरी",href:"/jobs"},{label:"एडमिट कार्ड",href:"/category/admit-card"},{label:"रिजल्ट",href:"/category/result"},{label:"स्कॉलरशिप",href:"/category/scholarship"}],
-  seo_title:"Updated Rojgar | सरकारी नौकरी", seo_description:"सरकारी नौकरी, भर्ती, एडमिट कार्ड, रिजल्ट और स्कॉलरशिप की जानकारी.",
+  seo_title:"Rojgar Sathi | सरकारी नौकरी", seo_description:"सरकारी नौकरी, भर्ती, एडमिट कार्ड, रिजल्ट और स्कॉलरशिप की जानकारी.",
   ads_enabled:false, adsense_client:"", ad_slot_home:"", ad_slot_job:"",
   topbar_text:"रोज़गार, परीक्षा और छात्रवृत्ति की जानकारी", footer_text:"रोज़गार साथी — आधिकारिक नोटिफिकेशन पढ़कर ही आवेदन करें।", header_style:"classic", footer_style:"columns", custom_css:""
 };
@@ -27,7 +27,12 @@ export async function getSettings(): Promise<SiteSettings> {
   try {
     const supabase = await createClient();
     const {data} = await supabase.from("site_settings").select("*").eq("id",1).maybeSingle();
-    return {...defaultSettings, ...(data ?? {})} as SiteSettings;
+    const merged = {...defaultSettings, ...(data ?? {})} as SiteSettings;
+    // Keep legacy saved settings from leaking the retired public brand.
+    if (/^updated\s*rojgar$/i.test(merged.brand_name?.trim() || "")) merged.brand_name = "Rojgar Sathi";
+    if (/^updated\s*rojgar\b/i.test(merged.seo_title?.trim() || "")) merged.seo_title = merged.seo_title.replace(/^updated\s*rojgar/i, "Rojgar Sathi");
+    if (/^updated\s*rojgar$/i.test(merged.splash_title?.trim() || "")) merged.splash_title = "Rojgar Sathi";
+    return merged;
   } catch { return defaultSettings; }
 }
 export async function getPublishedJobs(search = "") {
