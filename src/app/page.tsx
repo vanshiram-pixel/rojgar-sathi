@@ -72,9 +72,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <Link href="/category/result">Results</Link>
         <Link href="/category/scholarship">Scholarships</Link>
         <Link href="/category/government-schemes">Schemes</Link>
-        <Link href="/login">लॉगिन</Link>
+        <Link href="/login">लॉगिन / अकाउंट</Link>
       </nav>
-      <div className="mobile-auth"><Link href="/login">लॉगिन</Link><Link href="/register">रजिस्टर</Link><Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link></div>
+      <div className="mobile-auth"><Link href="/login">लॉगिन / अकाउंट</Link><Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link></div>
     </div></header>
     <main>
       {email_verified === "1" && <div className="wrap" style={{ paddingTop: 16 }}><div className="notice" role="status">ईमेल सफलतापूर्वक सत्यापित हो गया है। Rojgar Sathi में आपका स्वागत है। अब लॉगिन करके अपनी प्रोफाइल और डैशबोर्ड देख सकते हैं। <Link className="text-link" href="/login">लॉगिन करें →</Link></div></div>}
