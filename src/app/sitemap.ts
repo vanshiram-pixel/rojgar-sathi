@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar-vncs-projects-c99f6301.vercel.app").replace(/\/$/, "");
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar.vercel.app").replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let jobs: { id: string; updated_at?: string | null }[] = [];
