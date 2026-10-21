@@ -24,12 +24,13 @@ export async function POST(request: Request) {
     if (!email && !phone) return NextResponse.json({ error: "ब्राउज़र नोटिफिकेशन सदस्यता के लिए Push Server सेटअप अभी आवश्यक है।" }, { status: 503 });
 
     const supabase = await createClient();
-    const { error } = await supabase.from("notification_subscriptions").upsert({
+    const { error } = await supabase.from("notification_subscriptions").insert({
       email, phone, email_enabled: emailEnabled, whatsapp_enabled: whatsappEnabled,
       browser_enabled: browserEnabled, consent: true, consent_at: new Date().toISOString(),
       updated_at: new Date().toISOString(), is_active: true
-    }, { onConflict: email ? "email" : "phone" });
+    });
     if (error) {
+      if (error.code === "23505") return NextResponse.json({ error: "यह ईमेल या मोबाइल पहले से सब्सक्राइब है।" }, { status: 409 });
       if (error.code === "42P01" || error.code === "PGRST205") {
         return NextResponse.json({ error: "नोटिफिकेशन टेबल तैयार नहीं है। Admin को नई notification migration लागू करनी होगी।" }, { status: 503 });
       }
