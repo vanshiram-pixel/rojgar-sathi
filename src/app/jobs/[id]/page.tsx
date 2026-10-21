@@ -91,7 +91,7 @@ export default async function JobDetail({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJobPosting }} />
       <header className="header">
         <div className="wrap header-inner">
-          <Link className="brand" href="/"><span className="brand-mark">RS</span>{settings?.brand_name || "Rojgar Sathi"}</Link>
+          <Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>
           <Link className="text-link" href="/jobs">← सभी नौकरियाँ</Link>
         </div>
       </header>

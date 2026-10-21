@@ -80,7 +80,7 @@ export default function Login() {
   return (
     <main className="admin-login">
       <form className="login-card" onSubmit={submit}>
-        <Link className="brand" href="/"><span className="brand-mark">UR</span>Updated Rojgar</Link>
+        <Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>
         <h1>Admin Login</h1>
         <p className="sub">वेबसाइट और ऐप की सेटिंग प्रबंधित करें।</p>
         {adminAccessRequired && <div className="notice error" role="alert">इस खाते को एडमिन अनुमति नहीं है।</div>}

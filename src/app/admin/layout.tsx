@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="admin-shell">
       <aside className="admin-side">
-        <Link className="brand" href="/admin"><span className="brand-mark">UR</span>Rojgar Sathi</Link>
+        <Link className="brand" href="/admin" aria-label="Rojgar Sathi admin home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>
         <nav className="admin-nav">
           <Link href="/admin" aria-current={pathname === "/admin" ? "page" : undefined}>डैशबोर्ड</Link>
           <Link href="/admin/jobs" aria-current={pathname.startsWith("/admin/jobs") ? "page" : undefined}>भर्ती प्रबंधन</Link>

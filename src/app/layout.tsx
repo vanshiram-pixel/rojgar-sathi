@@ -12,10 +12,10 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(base),
     title: s.seo_title || s.brand_name,
     description: s.seo_description,
-    applicationName: s.brand_name || "Updated Rojgar",
+    applicationName: s.brand_name || "Rojgar Sathi",
     manifest: "/manifest.webmanifest",
     icons: { icon: s.favicon_url || "/icon.svg", apple: s.favicon_url || "/icon.svg" },
-    openGraph: { title: s.seo_title || s.brand_name, description: s.seo_description, type: "website", siteName: s.brand_name || "Updated Rojgar" },
+    openGraph: { title: s.seo_title || s.brand_name, description: s.seo_description, type: "website", siteName: s.brand_name || "Rojgar Sathi" },
     robots: { index: true, follow: true }
   };
 }
