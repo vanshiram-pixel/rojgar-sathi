@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-export function SplashScreen() {
+type SplashProps = { logoUrl?: string; splashImageUrl?: string; title?: string; subtitle?: string };
+
+export function SplashScreen({ logoUrl = "", splashImageUrl = "", title = "Rojgar Sathi", subtitle = "सरकारी नौकरी की सही जानकारी, सबसे पहले" }: SplashProps) {
   const [visible, setVisible] = useState(true);
   useEffect(() => {
     try {
@@ -21,12 +23,12 @@ export function SplashScreen() {
     }
   }, []);
   if (!visible) return null;
-  return <div className="splash-screen" role="status" aria-label="Rojgar Sathi loading">
+  return <div className="splash-screen" role="status" aria-label={`${title} loading`} style={splashImageUrl ? { backgroundImage: `linear-gradient(135deg, rgba(9, 20, 48, .88), rgba(21, 94, 239, .72)), url("${splashImageUrl}")`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
     <div className="splash-glow splash-glow-one" /><div className="splash-glow splash-glow-two" />
-    <div className="splash-content"><img className="splash-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" />
-      <p>सरकारी नौकरी की सही जानकारी, सबसे पहले</p>
+    <div className="splash-content"><img className="splash-logo" src={logoUrl || "/rojgar-sathi-logo.svg"} alt={title} />
+      <h1>{title}</h1><p>{subtitle}</p>
       <div className="splash-loader"><span /></div><small>आपके करियर की अगली शुरुआत…</small>
     </div>
-    <div className="splash-bottom"><span>रोज़गार साथी</span><span>Made for India 🇮🇳</span></div>
+    <div className="splash-bottom"><span>{title}</span><span>Made for India 🇮🇳</span></div>
   </div>;
 }
