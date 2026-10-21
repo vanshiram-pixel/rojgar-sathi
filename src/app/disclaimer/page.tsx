@@ -1,1 +1,18 @@
-import Link from "next/link";export default function Disclaimer(){return <main className="wrap page"><Link href="/" className="text-link">← होम</Link><h1 className="page-title">अस्वीकरण</h1><p>Updated Rojgar सूचना-सहायक प्लेटफॉर्म है, सरकारी वेबसाइट नहीं। भर्ती, पात्रता, फीस, तारीख और आवेदन प्रक्रिया के लिए संबंधित विभाग की आधिकारिक अधिसूचना ही अंतिम मानी जाए। आवेदन से पहले सभी विवरण सत्यापित करें।</p></main>}
+import Link from "next/link";
+
+export const metadata = {
+  title: "अस्वीकरण | Rojgar Sathi",
+  description: "Rojgar Sathi पर भर्ती, पात्रता, शुल्क और आवेदन तिथियों की आधिकारिक पुष्टि संबंधी अस्वीकरण।",
+};
+
+export default function Disclaimer() {
+  return (
+    <main className="wrap page">
+      <Link href="/" className="text-link">← होम</Link>
+      <h1 className="page-title">अस्वीकरण</h1>
+      <p>Rojgar Sathi एक स्वतंत्र सूचना-सहायक प्लेटफॉर्म है, सरकारी वेबसाइट नहीं। भर्ती, पात्रता, फीस, तारीख और आवेदन प्रक्रिया के लिए संबंधित विभाग की आधिकारिक अधिसूचना ही अंतिम मानी जाए। आवेदन से पहले सभी विवरण सत्यापित करें।</p>
+      <p>हम जानकारी को उपयोगी और अद्यतन रखने का प्रयास करते हैं, लेकिन किसी सूचना में बदलाव, त्रुटि या बाहरी वेबसाइट की अनुपलब्धता के लिए आधिकारिक स्रोत की जाँच आवश्यक है। Rojgar Sathi किसी सरकारी विभाग, भर्ती बोर्ड या विश्वविद्यालय का प्रतिनिधित्व नहीं करता।</p>
+      <p>यदि किसी सूचना में सुधार की आवश्यकता हो, तो कृपया <Link href="/contact">संपर्क करें</Link> पृष्ठ पर विवरण भेजें।</p>
+    </main>
+  );
+}

@@ -103,6 +103,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         {qualifications.map(([label, href]) => <Link href={href} key={href}>{label}<ArrowUpRight size={14}/></Link>)}
       </div></div></section>
     </main>
-    <footer className="footer"><div className="wrap footer-inner"><div><img className="brand-logo footer-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/categories">सभी विभाग और राज्य</Link><Link href="/privacy">गोपनीयता नीति</Link><Link href="/disclaimer">अस्वीकरण</Link><small>{settings.footer_text || "किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।"}</small></div></div></footer>
+    <footer className="footer"><div className="wrap footer-inner"><div><img className="brand-logo footer-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/categories">सभी विभाग और राज्य</Link><Link href="/privacy">गोपनीयता नीति</Link><Link href="/terms">नियम एवं शर्तें</Link><Link href="/disclaimer">अस्वीकरण</Link><Link href="/contact">संपर्क करें</Link><small>{settings.footer_text || "किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।"}</small></div></div></footer>
   </>;
 }
