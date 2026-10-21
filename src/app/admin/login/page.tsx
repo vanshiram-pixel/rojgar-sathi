@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
+function getBrowserQueryParam(key: string) {
+  if (typeof window === "undefined") return null;
+  return new URLSearchParams(window.location.search).get(key);
+}
+
 function friendlyAdminError(error: unknown) {
   const e = error as { message?: string; code?: string; status?: number };
   const message = (e?.message || "").toLowerCase();
@@ -33,7 +38,7 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    setAdminAccessRequired(new URLSearchParams(window.location.search).get("error") === "admin-access-required");
+    setAdminAccessRequired(getBrowserQueryParam("error") === "admin-access-required");
   }, []);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -61,7 +66,7 @@ export default function Login() {
       }
 
       setNotice("एडमिन लॉगिन सफल। डैशबोर्ड खोला जा रहा है…");
-      const next = new URLSearchParams(window.location.search).get("next");
+      const next = getBrowserQueryParam("next");
       const safeNext = next && next.startsWith("/admin/") && !next.startsWith("//") && next !== "/admin/login" ? next : "/admin";
       router.replace(safeNext);
       router.refresh();
