@@ -3,6 +3,7 @@ import { Search, BriefcaseBusiness, GraduationCap, Trophy, ArrowUpRight, ShieldC
 import { getPublishedJobs, getSettings } from "@/lib/data";
 import { JobCard } from "@/components/JobCard";
 import { AdSlot } from "@/components/AdSlot";
+import { NotificationCenter } from "@/components/NotificationCenter";
 import { createClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
@@ -71,12 +72,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
         <Link href="/category/result">Results</Link>
         <Link href="/category/scholarship">Scholarships</Link>
         <Link href="/category/government-schemes">Schemes</Link>
-        <Link href="/login">लॉगिन / अकाउंट</Link>
+        <Link href="/#notifications">नौकरी अलर्ट</Link>
       </nav>
-      <div className="mobile-auth"><Link href="/login">लॉगिन / अकाउंट</Link><Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link></div>
+      <div className="mobile-auth"><Link href="/#notifications">अलर्ट चालू करें</Link><Link className="mobile-menu text-link" href="/categories">श्रेणियाँ →</Link></div>
     </div></header>
     <main>
-      {email_verified === "1" && <div className="wrap" style={{ paddingTop: 16 }}><div className="notice" role="status">ईमेल सफलतापूर्वक सत्यापित हो गया है। Rojgar Sathi में आपका स्वागत है। अब लॉगिन करके अपनी प्रोफाइल और डैशबोर्ड देख सकते हैं। <Link className="text-link" href="/login">लॉगिन करें →</Link></div></div>}
+      {email_verified === "1" && <div className="wrap" style={{ paddingTop: 16 }}><div className="notice" role="status">ईमेल सत्यापन पूरा हुआ। अब बिना अकाउंट बनाए नौकरी अलर्ट चुन सकते हैं। <Link className="text-link" href="/#notifications">अलर्ट सेट करें →</Link></div></div>}
       <section className="portal-hero"><div className="wrap">
         <div className="portal-intro"><div><span className="eyebrow"><BriefcaseBusiness size={14} /> Rojgar Sathi · भर्ती और परीक्षा सूचना</span><h1>{settings.home_hero_title}</h1><p>{settings.home_hero_subtitle}</p></div>
           <div className="portal-trust"><ShieldCheck size={25}/><strong>स्रोत-आधारित जानकारी</strong><small>आवेदन करने से पहले मूल अधिसूचना और पात्रता की पुष्टि करें।</small></div>
@@ -102,6 +103,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       <section className="section portal-section"><div className="wrap"><div className="section-head"><div><h2>योग्यता के अनुसार अवसर</h2><div className="sub">अपनी शैक्षणिक योग्यता के आधार पर भर्ती खोजें; पात्रता हमेशा आधिकारिक विज्ञापन से जाँचें।</div></div></div><div className="qualification-list">
         {qualifications.map(([label, href]) => <Link href={href} key={href}>{label}<ArrowUpRight size={14}/></Link>)}
       </div></div></section>
+      <NotificationCenter />
     </main>
     <footer className="footer"><div className="wrap footer-inner"><div><img className="brand-logo footer-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /><p className="footer-description">{settings.tagline}. हम उपयोगकर्ताओं को आधिकारिक स्रोतों तक पहुँचने में सहायता करते हैं।</p></div><div className="footer-links"><Link href="/categories">सभी विभाग और राज्य</Link><Link href="/privacy">गोपनीयता नीति</Link><Link href="/terms">नियम एवं शर्तें</Link><Link href="/disclaimer">अस्वीकरण</Link><Link href="/contact">संपर्क करें</Link><small>{settings.footer_text || "किसी भी भर्ती की पुष्टि संबंधित आधिकारिक वेबसाइट से करें।"}</small></div></div></footer>
   </>;
