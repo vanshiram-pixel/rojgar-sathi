@@ -31,7 +31,10 @@ function matches(profile: any, job: any) {
     if (v === "board exams") return /board|exam|परीक्षा|बोर्ड/.test(haystack);
     return category.includes(v) || title.includes(v);
   });
-  const stateMatch = !profile.state || ["all india", "other"].includes(String(profile.state).toLowerCase()) || location.includes(String(profile.state).toLowerCase()) || location === "भारत" || location === "india";
+  const selectedState = String(profile.state || "").trim().toLowerCase();
+  const isAllIndia = !selectedState || ["all india", "all-india", "india", "भारत", "other", "अन्य"].includes(selectedState);
+  // A generic country-wide location must not bypass a user's selected state.
+  const stateMatch = isAllIndia || location.includes(selectedState);
   const q = String(profile.qualification || "").toLowerCase();
   const qualificationMatch = !q || !qualification || qualification.includes(q) || q.includes(qualification) || /any|कोई भी/.test(q);
   return categoryMatch && stateMatch && qualificationMatch;
