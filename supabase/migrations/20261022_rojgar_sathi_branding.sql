@@ -6,7 +6,7 @@ set
   brand_name = 'Rojgar Sathi',
   splash_title = case when lower(trim(coalesce(splash_title, ''))) in ('updated rojgar', 'rojgar sathi') then 'Rojgar Sathi' else splash_title end,
   seo_title = case when lower(trim(coalesce(seo_title, ''))) like 'updated rojgar%' then regexp_replace(seo_title, '^Updated[[:space:]]+Rojgar', 'Rojgar Sathi', 'i') else coalesce(nullif(seo_title, ''), 'Rojgar Sathi | सरकारी नौकरी') end,
-  logo_url = case when coalesce(trim(logo_url), '') = '' then '/rojgar-sathi-logo.svg' else logo_url end,
+  logo_url = '/rojgar-sathi-logo.svg',
   updated_at = now()
 where id = 1;
 
