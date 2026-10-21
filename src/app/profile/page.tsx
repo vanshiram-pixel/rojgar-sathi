@@ -3,6 +3,7 @@ import {useEffect,useState} from "react";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {createClient} from "@/lib/supabase/client";
+import "./profile.css";
 
 const categories=["Latest Jobs","Rajasthan Govt Jobs","Central Government Jobs","State Government Jobs","Police Recruitment","Railway Jobs","Teaching Jobs","Admit Card","Results","Answer Key","Scholarships","Admissions","University Updates","Government Schemes","Apprenticeship","Board Exams"];
 const categoryLinks:Record<string,string>={"Latest Jobs":"/jobs","Rajasthan Govt Jobs":"/category/rajasthan-government-jobs","Central Government Jobs":"/category/central-government-jobs","State Government Jobs":"/categories","Police Recruitment":"/category/police-paramilitary-jobs","Railway Jobs":"/category/railway-jobs","Teaching Jobs":"/category/teaching-jobs","Admit Card":"/category/admit-card","Results":"/category/result","Answer Key":"/category/answer-key","Scholarships":"/category/scholarship","Admissions":"/category/admissions","University Updates":"/category/university-updates","Government Schemes":"/category/government-schemes","Apprenticeship":"/category/apprenticeship","Board Exams":"/category/board-exams"};
