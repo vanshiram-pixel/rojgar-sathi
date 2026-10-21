@@ -12,7 +12,7 @@ export type SiteSettings = {
   topbar_text: string; footer_text: string; header_style: string; footer_style: string; custom_css: string;
 };
 export const defaultSettings: SiteSettings = {
-  brand_name:"Rojgar Sathi", tagline:"सरकारी नौकरी और करियर की सही जानकारी", logo_url:"", favicon_url:"",
+  brand_name:"Rojgar Sathi", tagline:"सरकारी नौकरी और करियर की सही जानकारी", logo_url:"/rojgar-sathi-logo.svg", favicon_url:"",
   splash_image_url:"", splash_title:"Rojgar Sathi", splash_subtitle:"आपके भविष्य की सही शुरुआत",
   primary_color:"#155eef", accent_color:"#12b981", background_color:"#f5f7fb", theme_mode:"light",
   font_family:"system", layout_preset:"modern", home_hero_title:"अपनी अगली नौकरी यहाँ खोजें",
