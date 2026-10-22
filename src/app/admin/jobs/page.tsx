@@ -38,6 +38,7 @@ function JobsAdmin() {
   const [filter, setFilter] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [sendingAlertFor, setSendingAlertFor] = useState("");
 
   async function load() {
     const s = createClient();
@@ -170,6 +171,27 @@ function JobsAdmin() {
     else {
       setMsg("भर्ती हटा दी गई।");
       await load();
+    }
+  }
+
+  async function sendAlerts(jobId: string) {
+    if (sendingAlertFor) return;
+    setSendingAlertFor(jobId);
+    setErr("");
+    setMsg("");
+    try {
+      const response = await fetch("/api/admin/send-job-alerts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "ईमेल अलर्ट नहीं भेजे जा सके।");
+      setMsg(`ईमेल अलर्ट: ${result.sent || 0} भेजे, ${result.skipped || 0} पहले से भेजे जा चुके, ${result.failed || 0} असफल।`);
+    } catch (e: any) {
+      setErr(e.message || "ईमेल अलर्ट भेजने में समस्या हुई।");
+    } finally {
+      setSendingAlertFor("");
     }
   }
 
@@ -346,7 +368,7 @@ function JobsAdmin() {
                   <td><span className={"status " + row.status}>{row.status}</span></td>
                   <td>
                     <button type="button" className="small-btn" onClick={() => edit(row)}>संपादित</button>{" "}
-                    <button type="button" className="small-btn" onClick={() => del(row.id)}>हटाएँ</button>
+                    <button type="button" className="small-btn" onClick={() => del(row.id)}>हटाएँ</button>{" "}{row.status === "published" ? <button type="button" className="small-btn" disabled={!!sendingAlertFor} onClick={() => sendAlerts(row.id)}>{sendingAlertFor === row.id ? "ईमेल भेज रहे हैं…" : "मेल अलर्ट भेजें"}</button> : null}
                   </td>
                 </tr>
               ))}
