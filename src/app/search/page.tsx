@@ -6,7 +6,7 @@ export const revalidate = 60;
 
 export default async function UnifiedSearch({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q = "" } = await searchParams;
-  const term = q.trim().replace(/[%_,]/g, " ");
+  const term = q.trim().replaceAll("%"," ").replaceAll("_"," ").replaceAll(","," ").replaceAll("."," ").replaceAll(":"," ").replaceAll("("," ").replaceAll(")"," ").replaceAll("\\"," ").replaceAll("*"," ").replaceAll('"'," ");
   const supabase = await createClient();
   let jobs: any[] = [];
   let items: any[] = [];

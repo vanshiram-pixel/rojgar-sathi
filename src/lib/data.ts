@@ -41,7 +41,7 @@ export async function getSettings(): Promise<SiteSettings> {
 export async function getPublishedJobs(search = "") {
   try {
     const supabase = await createClient();
-    const term = search.trim().replace(/[%_,]/g," ");
+    const term = search.trim().replaceAll("%"," ").replaceAll("_"," ").replaceAll(","," ").replaceAll("."," ").replaceAll(":"," ").replaceAll("("," ").replaceAll(")"," ").replaceAll("\\"," ").replaceAll("*"," ").replaceAll('"'," ");
     let query = supabase.from("jobs").select("*").eq("status","published").order("created_at",{ascending:false}).limit(100);
     if (term) query = query.or(`title.ilike.%${term}%,organization.ilike.%${term}%,category.ilike.%${term}%,department.ilike.%${term}%,qualification.ilike.%${term}%`);
     const result = await query;
