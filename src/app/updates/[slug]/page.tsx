@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const item = await getContent(slug);
   if (!item) return { title: "जानकारी उपलब्ध नहीं | Rojgar Sathi", robots: { index: false, follow: true } };
-  const site = (process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar.vercel.app").replace(/\/$/, "");
+  const site = (process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").replace(/\/$/, "");
   return {
     title: item.title + " | Rojgar Sathi",
     description: (item.summary || item.eligibility || item.title).slice(0, 300),
@@ -41,7 +41,7 @@ export default async function UpdateDetail({ params }: Props) {
   return (
     <>
       <header className="header"><div className="wrap header-inner">
-        <Link className="brand" href="/">रोज़गार साथी</Link>
+        <Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>
         <Link className="text-link" href="/categories">← सभी श्रेणियाँ</Link>
       </div></header>
       <main className="wrap page">
