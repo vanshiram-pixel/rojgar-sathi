@@ -165,7 +165,7 @@ export default async function Category({ params }: { params: Promise<{ slug: str
     <>
       <header className="header">
         <div className="wrap header-inner">
-          <Link className="brand" href="/">रोज़गार साथी</Link>
+          <Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>
           <Link href="/categories" className="text-link">← सभी श्रेणियाँ</Link>
         </div>
       </header>
