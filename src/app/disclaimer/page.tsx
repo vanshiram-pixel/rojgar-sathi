@@ -8,7 +8,7 @@ export const metadata = {
 export default function Disclaimer() {
   return (
     <main className="wrap page">
-      <Link href="/" className="text-link">← होम</Link>
+      <header className="header"><div className="wrap header-inner"><Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link><Link href="/" className="text-link">← होम</Link></div></header>
       <h1 className="page-title">अस्वीकरण</h1>
       <p>Rojgar Sathi एक स्वतंत्र सूचना-सहायक प्लेटफॉर्म है, सरकारी वेबसाइट नहीं। भर्ती, पात्रता, फीस, तारीख और आवेदन प्रक्रिया के लिए संबंधित विभाग की आधिकारिक अधिसूचना ही अंतिम मानी जाए। आवेदन से पहले सभी विवरण सत्यापित करें।</p>
       <p>हम जानकारी को उपयोगी और अद्यतन रखने का प्रयास करते हैं, लेकिन किसी सूचना में बदलाव, त्रुटि या बाहरी वेबसाइट की अनुपलब्धता के लिए आधिकारिक स्रोत की जाँच आवश्यक है। Rojgar Sathi किसी सरकारी विभाग, भर्ती बोर्ड या विश्वविद्यालय का प्रतिनिधित्व नहीं करता।</p>
