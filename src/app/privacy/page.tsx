@@ -8,7 +8,7 @@ export const metadata = {
 export default function PrivacyPage() {
   return (
     <main className="wrap page">
-      <Link href="/" className="text-link">← होम</Link>
+      <header className="header"><div className="wrap header-inner"><Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link><Link href="/" className="text-link">← होम</Link></div></header>
       <h1 className="page-title">गोपनीयता नीति</h1>
       <p><strong>अंतिम अद्यतन: 21 अक्टूबर 2026</strong></p>
       <p>Rojgar Sathi भर्ती, परीक्षा, छात्रवृत्ति और सरकारी योजनाओं से संबंधित जानकारी खोजने में सहायता करने वाला स्वतंत्र प्लेटफॉर्म है। यह नीति बताती है कि वेबसाइट का उपयोग करते समय कौन-सी जानकारी संसाधित हो सकती है और उससे जुड़े प्रश्नों के लिए हमसे कैसे संपर्क करें।</p>
