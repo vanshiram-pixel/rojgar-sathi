@@ -41,7 +41,7 @@ export default function Profile(){
  const completion=[!!name.trim(),!!phone.trim(),!!qualification,selected.length>0].filter(Boolean).length*25;
  return <main className="user-dashboard">
   <aside className="user-sidebar">
-   <Link className="user-brand" href="/"><span className="user-brand-icon">RS</span><span><strong>Rojgar Sathi</strong><small>CAREER DASHBOARD</small></span></Link>
+   <Link className="user-brand" href="/"><img className="brand-logo user-brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi logo" /><span><strong>Rojgar Sathi</strong><small>CAREER DASHBOARD</small></span></Link>
    <div className="user-side-label">WORKSPACE</div>
    <Link className="user-side-link active" href="/profile"><span>▦</span> मेरा डैशबोर्ड</Link>
    <Link className="user-side-link" href="/jobs"><span>⌕</span> सभी भर्तियाँ <b>↗</b></Link>
