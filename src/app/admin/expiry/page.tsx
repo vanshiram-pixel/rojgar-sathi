@@ -65,7 +65,7 @@ function ExpiryManager() {
   ));
   const expiringSoon = all.filter((x) => x.status === "published" && matchesSearch(x) && (
     (x.application_end && x.application_end >= today() && x.application_end <= inSevenDays()) ||
-    (x.valid_through && x.valid_through >= today() && x.valid_through <= new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10))
+    (x.valid_through && x.valid_through >= today() && x.valid_through <= inSevenDays())
   ));
   const archived = all.filter((x) => x.status === "archived" && matchesSearch(x));
   const pending = proposals.filter((x) => x.status === "pending");
