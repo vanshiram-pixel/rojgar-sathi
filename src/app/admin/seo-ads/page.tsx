@@ -58,7 +58,7 @@ function SeoAdsForm() {
     const publisher = config.adsense_client.trim();
     const homeSlot = config.ad_slot_home.trim();
     const jobSlot = config.ad_slot_job.trim();
-    if (config.ads_enabled && (!/^ca-pub-\\d+$/.test(publisher) || !/^\\d+$/.test(homeSlot) || !/^\\d+$/.test(jobSlot))) {
+    if (config.ads_enabled && (!/^ca-pub-[0-9]+$/.test(publisher) || !/^[0-9]+$/.test(homeSlot) || !/^[0-9]+$/.test(jobSlot))) {
       setError("विज्ञापन चालू करने के लिए सही Publisher ID (ca-pub-…), होमपेज Ad Slot ID और भर्ती-पेज Ad Slot ID तीनों भरें। ये ID Google AdSense से ही लें।");
       setSaving(false);
       return;
@@ -124,7 +124,7 @@ function SeoAdsForm() {
               {field("भर्ती विवरण Ad Slot ID", "ad_slot_job", "उदाहरण: 1234567890")}
             </div>
             <p className="sub">सुरक्षा: यहाँ केवल Publisher/Slot ID रखें—कभी भी निजी API key या service-role key नहीं। विज्ञापन दिखना AdSense approval, साइट स्क्रिप्ट और नीति अनुपालन पर निर्भर करता है।</p>
-            {config.ads_enabled && (!/^ca-pub-\\d+$/.test(config.adsense_client.trim()) || !/^\\d+$/.test(config.ad_slot_home.trim()) || !/^\\d+$/.test(config.ad_slot_job.trim())) ? <div className="notice error" role="alert">AdSense सक्षम है, लेकिन Publisher ID या दोनों Ad Slot ID में से कोई खाली/गलत है। ID भरने तक वेबसाइट पर विज्ञापन नहीं दिखेंगे।</div> : null}
+            {config.ads_enabled && (!/^ca-pub-[0-9]+$/.test(config.adsense_client.trim()) || !/^[0-9]+$/.test(config.ad_slot_home.trim()) || !/^[0-9]+$/.test(config.ad_slot_job.trim())) ? <div className="notice error" role="alert">AdSense सक्षम है, लेकिन Publisher ID या दोनों Ad Slot ID में से कोई खाली/गलत है। ID भरने तक वेबसाइट पर विज्ञापन नहीं दिखेंगे।</div> : null}
           </section>
           <button className="btn" disabled={saving}>{saving ? "सेव हो रहा है…" : "SEO और विज्ञापन सेटिंग सेव करें"}</button>
         </form>
