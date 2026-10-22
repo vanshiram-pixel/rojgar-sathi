@@ -5,7 +5,19 @@ import { AdminGuard } from "@/components/AdminGuard";
 import { createClient } from "@/lib/supabase/client";
 
 type Item = any;
-const today = () => new Date().toISOString().slice(0, 10);
+const indiaDate = (date: Date) => {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(date);
+  const part = (type: string) => parts.find((item) => item.type === type)?.value || "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+};
+const today = () => indiaDate(new Date());
+const inSevenDays = () => {
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() + 7);
+  return indiaDate(date);
+};
 const allowedFields = new Set(["application_start", "application_end", "exam_date", "valid_through", "status", "title", "description", "official_url", "notification_url"]);
 
 function ExpiryManager() {
@@ -52,8 +64,8 @@ function ExpiryManager() {
     (x.valid_through && x.valid_through < today())
   ));
   const expiringSoon = all.filter((x) => x.status === "published" && matchesSearch(x) && (
-    (x.application_end && x.application_end >= today() && x.application_end <= new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10)) ||
-    (x.valid_through && x.valid_through >= today() && x.valid_through <= new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10))
+    (x.application_end && x.application_end >= today() && x.application_end <= inSevenDays()) ||
+    (x.valid_through && x.valid_through >= today() && x.valid_through <= inSevenDays())
   ));
   const archived = all.filter((x) => x.status === "archived" && matchesSearch(x));
   const pending = proposals.filter((x) => x.status === "pending");

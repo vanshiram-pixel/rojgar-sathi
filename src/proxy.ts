@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   // OAuth/email callback must exchange its one-time code before any dashboard redirect.
   if (pathname === "/auth/callback") return NextResponse.next({ request });

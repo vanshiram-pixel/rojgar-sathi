@@ -13,6 +13,19 @@ const blank: any = {
   image_url: "", description: "", status: "draft", featured: false
 };
 
+function todayInIndia(): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(new Date());
+  const part = (type: string) => parts.find((item) => item.type === type)?.value || "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function isHttpsUrl(value: unknown): boolean {
+  if (typeof value !== "string" || !value.trim()) return false;
+  try { return new URL(value.trim()).protocol === "https:"; } catch { return false; }
+}
+
 function JobsAdmin() {
   const [rows, setRows] = useState<any[]>([]);
   const [allCategoryOptions, setAllCategoryOptions] = useState<any[]>([]);
@@ -25,6 +38,7 @@ function JobsAdmin() {
   const [filter, setFilter] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [sendingAlertFor, setSendingAlertFor] = useState("");
 
   async function load() {
     const s = createClient();
@@ -106,11 +120,26 @@ function JobsAdmin() {
     setMsg("");
     setErr("");
     try {
+      const title = String(form.title || "").trim();
+      const organization = String(form.organization || "").trim();
+      const officialUrl = String(form.official_url || "").trim();
+      const notificationUrl = String(form.notification_url || "").trim();
+      if (!title) throw new Error("भर्ती का नाम भरना आवश्यक है।");
+      if (form.status === "published") {
+        if (!organization) throw new Error("प्रकाशित भर्ती के लिए विभाग / संस्था का नाम भरें।");
+        if (!isHttpsUrl(officialUrl) && !isHttpsUrl(notificationUrl)) throw new Error("प्रकाशित भर्ती के लिए कम-से-कम एक आधिकारिक HTTPS लिंक आवश्यक है।");
+        if (form.application_end && form.application_end < todayInIndia()) throw new Error("आवेदन की अंतिम तिथि निकल चुकी है। पोस्ट को आर्काइव करें या आधिकारिक तारीख सत्यापित करें।");
+      }
+      if (String(form.vacancies || "").trim() && (!/^\d+$/.test(String(form.vacancies).trim()) || Number(form.vacancies) < 1)) {
+        throw new Error("कुल पदों में केवल 1 या उससे अधिक की पूर्ण संख्या दर्ज करें।");
+      }
       const s = createClient();
       const payload = {
         ...form,
-        title: String(form.title || "").trim(),
-        organization: String(form.organization || "").trim(),
+        title,
+        organization,
+        official_url: officialUrl || null,
+        notification_url: notificationUrl || null,
         category_slugs: [...new Set([...(Array.isArray(form.category_slugs) ? form.category_slugs : []), ...(form.primary_category_slug ? [form.primary_category_slug] : []), ...(form.state_slug ? [form.state_slug] : []), ...(form.department_slug ? [form.department_slug] : [])])],
         application_start: form.application_start || null,
         application_end: form.application_end || null,
@@ -142,6 +171,27 @@ function JobsAdmin() {
     else {
       setMsg("भर्ती हटा दी गई।");
       await load();
+    }
+  }
+
+  async function sendAlerts(jobId: string) {
+    if (sendingAlertFor) return;
+    setSendingAlertFor(jobId);
+    setErr("");
+    setMsg("");
+    try {
+      const response = await fetch("/api/admin/send-job-alerts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "ईमेल अलर्ट नहीं भेजे जा सके।");
+      setMsg(`ईमेल अलर्ट: ${result.sent || 0} भेजे, ${result.skipped || 0} पहले से भेजे जा चुके, ${result.failed || 0} असफल।`);
+    } catch (e: any) {
+      setErr(e.message || "ईमेल अलर्ट भेजने में समस्या हुई।");
+    } finally {
+      setSendingAlertFor("");
     }
   }
 
@@ -318,7 +368,7 @@ function JobsAdmin() {
                   <td><span className={"status " + row.status}>{row.status}</span></td>
                   <td>
                     <button type="button" className="small-btn" onClick={() => edit(row)}>संपादित</button>{" "}
-                    <button type="button" className="small-btn" onClick={() => del(row.id)}>हटाएँ</button>
+                    <button type="button" className="small-btn" onClick={() => del(row.id)}>हटाएँ</button>{" "}{row.status === "published" ? <button type="button" className="small-btn" disabled={!!sendingAlertFor} onClick={() => sendAlerts(row.id)}>{sendingAlertFor === row.id ? "ईमेल भेज रहे हैं…" : "मेल अलर्ट भेजें"}</button> : null}
                   </td>
                 </tr>
               ))}
