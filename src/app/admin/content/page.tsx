@@ -18,6 +18,19 @@ const typeLabels: Record<string, string> = {
   employment_update: "रोजगार अपडेट"
 };
 
+function todayInIndia(): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(new Date());
+  const part = (type: string) => parts.find((item) => item.type === type)?.value || "";
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function isHttpsUrl(value: unknown): boolean {
+  if (typeof value !== "string" || !value.trim()) return false;
+  try { return new URL(value.trim()).protocol === "https:"; } catch { return false; }
+}
+
 function ContentManager() {
   const [rows, setRows] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
