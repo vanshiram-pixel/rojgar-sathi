@@ -8,10 +8,24 @@ declare global {
   }
 }
 
-export function AdSlot({ enabled, client, slot }: { enabled: boolean; client: string; slot: string }) {
+type AdSlotProps = {
+  enabled: boolean;
+  client: string;
+  slot: string;
+  compact?: boolean;
+  label?: string;
+};
+
+export function AdSlot({
+  enabled,
+  client,
+  slot,
+  compact = false,
+  label = "विज्ञापन",
+}: AdSlotProps) {
   const adRef = useRef<HTMLModElement>(null);
-  const validClient = /^ca-pub-\d+$/.test(client.trim());
-  const validSlot = /^\d+$/.test(slot.trim());
+  const validClient = /^ca-pub-\\d+$/.test(client.trim());
+  const validSlot = /^\\d+$/.test(slot.trim());
 
   useEffect(() => {
     if (!enabled || !validClient || !validSlot || !adRef.current) return;
@@ -25,7 +39,10 @@ export function AdSlot({ enabled, client, slot }: { enabled: boolean; client: st
   if (!enabled || !validClient || !validSlot) return null;
 
   return (
-    <div className="adsense-slot" aria-label="विज्ञापन">
+    <div
+      className={compact ? "adsense-slot adsense-slot-compact" : "adsense-slot"}
+      aria-label={label}
+    >
       <ins
         ref={adRef}
         className="adsbygoogle"
