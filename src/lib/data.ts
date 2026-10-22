@@ -28,6 +28,9 @@ export async function getSettings(): Promise<SiteSettings> {
     const supabase = await createClient();
     const {data} = await supabase.from("site_settings").select("*").eq("id",1).maybeSingle();
     const merged = {...defaultSettings, ...(data ?? {})} as SiteSettings;
+    if (!merged.brand_name?.trim()) merged.brand_name = defaultSettings.brand_name;
+    if (!merged.logo_url?.trim()) merged.logo_url = defaultSettings.logo_url;
+    if (!merged.splash_title?.trim()) merged.splash_title = merged.brand_name || defaultSettings.splash_title;
     // Keep legacy saved settings from leaking the retired public brand.
     if (/^updated\s*rojgar$/i.test(merged.brand_name?.trim() || "")) { merged.brand_name = "Rojgar Sathi"; merged.logo_url = "/rojgar-sathi-logo.svg"; }
     if (/^updated\s*rojgar\b/i.test(merged.seo_title?.trim() || "")) merged.seo_title = merged.seo_title.replace(/^updated\s*rojgar/i, "Rojgar Sathi");
