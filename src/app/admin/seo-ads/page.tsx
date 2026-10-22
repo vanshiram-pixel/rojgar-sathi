@@ -55,11 +55,24 @@ function SeoAdsForm() {
     setSaving(true);
     setNotice("");
     setError("");
+    const publisher = config.adsense_client.trim();
+    const homeSlot = config.ad_slot_home.trim();
+    const jobSlot = config.ad_slot_job.trim();
+    if (config.ads_enabled && (!/^ca-pub-\\d+$/.test(publisher) || !/^\\d+$/.test(homeSlot) || !/^\\d+$/.test(jobSlot))) {
+      setError("विज्ञापन चालू करने के लिए सही Publisher ID (ca-pub-…), होमपेज Ad Slot ID और भर्ती-पेज Ad Slot ID तीनों भरें। ये ID Google AdSense से ही लें।");
+      setSaving(false);
+      return;
+    }
+    if (config.seo_title.trim().length < 10 || config.seo_title.trim().length > 70 || config.seo_description.trim().length < 40 || config.seo_description.trim().length > 320) {
+      setError("SEO शीर्षक 10–70 अक्षर और Meta Description 40–320 अक्षर का रखें।");
+      setSaving(false);
+      return;
+    }
     try {
       const supabase = createClient();
       const { error: saveError } = await supabase
         .from("site_settings")
-        .update({ ...config, updated_at: new Date().toISOString() })
+        .update({ ...config, seo_title: config.seo_title.trim(), seo_description: config.seo_description.trim(), adsense_client: publisher, ad_slot_home: homeSlot, ad_slot_job: jobSlot, updated_at: new Date().toISOString() })
         .eq("id", 1);
       if (saveError) throw saveError;
       setNotice("SEO और विज्ञापन सेटिंग सेव हो गईं। सार्वजनिक वेबसाइट पर बदलाव की जाँच करें।");
@@ -111,6 +124,7 @@ function SeoAdsForm() {
               {field("भर्ती विवरण Ad Slot ID", "ad_slot_job", "उदाहरण: 1234567890")}
             </div>
             <p className="sub">सुरक्षा: यहाँ केवल Publisher/Slot ID रखें—कभी भी निजी API key या service-role key नहीं। विज्ञापन दिखना AdSense approval, साइट स्क्रिप्ट और नीति अनुपालन पर निर्भर करता है।</p>
+            {config.ads_enabled && (!/^ca-pub-\\d+$/.test(config.adsense_client.trim()) || !/^\\d+$/.test(config.ad_slot_home.trim()) || !/^\\d+$/.test(config.ad_slot_job.trim())) ? <div className="notice error" role="alert">AdSense सक्षम है, लेकिन Publisher ID या दोनों Ad Slot ID में से कोई खाली/गलत है। ID भरने तक वेबसाइट पर विज्ञापन नहीं दिखेंगे।</div> : null}
           </section>
           <button className="btn" disabled={saving}>{saving ? "सेव हो रहा है…" : "SEO और विज्ञापन सेटिंग सेव करें"}</button>
         </form>
