@@ -7,7 +7,7 @@ import { SplashScreen } from "@/components/SplashScreen";
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-nu.vercel.app";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar.vercel.app";
   return {
     metadataBase: new URL(base),
     title: s.seo_title || s.brand_name,
