@@ -14,8 +14,8 @@ type Config = {
 };
 
 const initial: Config = {
-  seo_title: "Updated Rojgar | सरकारी नौकरी",
-  seo_description: "सरकारी नौकरी, भर्ती, एडमिट कार्ड, रिजल्ट और स्कॉलरशिप की जानकारी।",
+  seo_title: "Rojgar Sathi | सरकारी नौकरी",
+  seo_description: "सरकारी नौकरी, भर्ती, एडमिट कार्ड, रिजल्ट और स्कॉलरशिप की नवीनतम जानकारी।",
   ads_enabled: false,
   adsense_client: "",
   ad_slot_home: "",
