@@ -120,13 +120,24 @@ function ContentManager() {
     setError("");
     setMessage("");
     try {
-      const client = createClient();
-      const slug = String(form.slug || makeSlug(form.title)).trim().toLowerCase();
+      const title = String(form.title || "").trim();
+      const slug = String(form.slug || makeSlug(title)).trim().toLowerCase();
+      const officialUrl = String(form.official_url || "").trim();
+      const notificationUrl = String(form.notification_url || "").trim();
+      if (!title) throw new Error("पोस्ट का शीर्षक भरना आवश्यक है।");
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error("URL slug में केवल English अक्षर, अंक और hyphen रखें।");
+      if (form.status === "published") {
+        if (!isHttpsUrl(officialUrl) && !isHttpsUrl(notificationUrl)) throw new Error("प्रकाशित जानकारी के लिए कम-से-कम एक आधिकारिक HTTPS लिंक आवश्यक है।");
+        if (form.application_end && form.application_end < todayInIndia()) throw new Error("आवेदन की अंतिम तिथि निकल चुकी है। पोस्ट को आर्काइव करें या आधिकारिक तारीख सत्यापित करें।");
+      }
+      if (form.application_start && form.application_end && form.application_start > form.application_end) throw new Error("आवेदन शुरू होने की तारीख, अंतिम तिथि से बाद की नहीं हो सकती।");
+      const client = createClient();
       const payload = {
         ...form,
-        title: String(form.title || "").trim(),
+        title,
         slug,
+        official_url: officialUrl || null,
+        notification_url: notificationUrl || null,
         category_slugs: [...new Set([...(Array.isArray(form.category_slugs) ? form.category_slugs : []), ...(form.primary_category_slug ? [form.primary_category_slug] : []), ...(form.state_slug ? [form.state_slug] : []), ...(form.department_slug ? [form.department_slug] : [])])],
         state_slug: form.state_slug || "",
         department_slug: form.department_slug || "",
