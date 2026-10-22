@@ -32,7 +32,7 @@ export default async function UnifiedSearch({ searchParams }: { searchParams: Pr
   return (
     <>
       <header className="header"><div className="wrap header-inner">
-        <Link className="brand" href="/">रोज़गार साथी</Link>
+        <Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>
         <Link className="text-link" href="/categories">विभाग व श्रेणियाँ →</Link>
       </div></header>
       <main className="wrap page">
