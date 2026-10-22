@@ -4,7 +4,7 @@ import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").replace(/\\/$/, "");
+const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").origin;
 
 function escapeHtml(value: unknown): string {
   return String(value ?? "").replace(/[&<>"']/g, (char) => ({
