@@ -9,7 +9,7 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <main className="wrap page">
-      <Link href="/" className="text-link">← होम</Link>
+      <header className="header"><div className="wrap header-inner"><Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link><Link href="/" className="text-link">← होम</Link></div></header>
       <h1 className="page-title">संपर्क करें</h1>
       <p>Rojgar Sathi पर प्रकाशित सूचना में सुधार, वेबसाइट से जुड़ी समस्या या सुझाव के लिए हमसे संपर्क करें। किसी भर्ती की पात्रता, शुल्क या आवेदन की अंतिम पुष्टि संबंधित विभाग की आधिकारिक अधिसूचना से ही करें।</p>
       <section className="section" aria-labelledby="contact-details">
