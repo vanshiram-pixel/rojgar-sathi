@@ -24,8 +24,8 @@ export function AdSlot({
   label = "विज्ञापन",
 }: AdSlotProps) {
   const adRef = useRef<HTMLModElement>(null);
-  const validClient = /^ca-pub-\\d+$/.test(client.trim());
-  const validSlot = /^\\d+$/.test(slot.trim());
+  const validClient = /^ca-pub-\d+$/.test(client.trim());
+  const validSlot = /^\d+$/.test(slot.trim());
 
   useEffect(() => {
     if (!enabled || !validClient || !validSlot || !adRef.current) return;
