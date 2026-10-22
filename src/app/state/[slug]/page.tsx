@@ -23,7 +23,7 @@ export default async function StateJobsPage({ params }: { params: Promise<{ slug
   (contentByName || []).forEach((item: any) => uniqueContent.set(item.id, item));
   const contentItems = [...uniqueContent.values()].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   return <>
-    <header className="header"><div className="wrap header-inner"><Link className="brand" href="/">रोज़गार साथी</Link><Link href="/categories" className="text-link">← सभी श्रेणियाँ</Link></div></header>
+    <header className="header"><div className="wrap header-inner"><Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link><Link href="/categories" className="text-link">← सभी श्रेणियाँ</Link></div></header>
     <main className="wrap page">
       <p className="eyebrow">राज्यवार भर्ती</p>
       <h1 className="page-title">{state.name} सरकारी नौकरी</h1>
