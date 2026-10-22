@@ -25,7 +25,7 @@ export default async function CategoriesPage() {
   } catch {}
 
   return <>
-    <header className="header"><div className="wrap header-inner"><Link className="brand" href="/">रोज़गार साथी</Link><Link href="/" className="text-link">← होम</Link></div></header>
+    <header className="header"><div className="wrap header-inner"><Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link><Link href="/" className="text-link">← होम</Link></div></header>
     <main className="wrap page">
       <h1 className="page-title">सभी श्रेणियाँ और राज्यवार भर्ती</h1>
       <p className="sub">केंद्र सरकार, सभी राज्य/केंद्रशासित प्रदेश, शिक्षा, परीक्षा, छात्रवृत्ति और योजनाओं की श्रेणियाँ। आवेदन से पहले संबंधित विभाग की आधिकारिक अधिसूचना अवश्य पढ़ें।</p>
