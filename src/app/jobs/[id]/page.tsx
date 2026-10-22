@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const job = await getJob(id);
   if (!job) return { title: "नौकरी उपलब्ध नहीं है | Rojgar Sathi", robots: { index: false, follow: true } };
 
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar.vercel.app").replace(/\/$/, "");
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").replace(/\/$/, "");
   const title = `${job.title} – ${job.organization} भर्ती | Rojgar Sathi`;
   const description = [job.organization, job.vacancies ? `कुल पद: ${job.vacancies}` : "", job.qualification ? `योग्यता: ${job.qualification}` : "", job.application_end ? `अंतिम तिथि: ${job.application_end}` : ""].filter(Boolean).join("। ").slice(0, 300);
   return {
@@ -48,7 +48,7 @@ export default async function JobDetail({ params }: PageProps) {
   ]);
   if (!job) notFound();
 
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://updated-rojgar.vercel.app").replace(/\/$/, "");
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").replace(/\/$/, "");
   const validThrough = job.valid_through || job.application_end || undefined;
   const jobPosting: Record<string, unknown> = {
     "@context": "https://schema.org",
