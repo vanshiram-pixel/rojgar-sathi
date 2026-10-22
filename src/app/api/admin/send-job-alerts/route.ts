@@ -71,9 +71,11 @@ export async function POST(request: Request) {
     if (!jobId) return NextResponse.json({ error: "jobId जरूरी है।" }, { status: 400 });
     const { data: job, error: jobError } = await supabase.from("jobs").select("*").eq("id", jobId).eq("status", "published").maybeSingle();
     if (jobError || !job) return NextResponse.json({ error: "प्रकाशित भर्ती नहीं मिली।" }, { status: 404 });
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!serviceKey) return NextResponse.json({ error: "यूज़र डेटा पढ़ने के लिए SUPABASE_SERVICE_ROLE_KEY सेट करें।" }, { status: 503 });
-    const adminDb = createSupabaseAdmin(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
+    const serviceKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    if (!supabaseUrl) return NextResponse.json({ error: "Supabase URL सेट नहीं है।" }, { status: 503 });
+    if (!serviceKey) return NextResponse.json({ error: "यूज़र डेटा पढ़ने के लिए SUPABASE_SECRET_KEY या SUPABASE_SERVICE_ROLE_KEY सेट करें।" }, { status: 503 });
+    const adminDb = createSupabaseAdmin(supabaseUrl, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
     const apiKey = process.env.RESEND_API_KEY;
     const from = process.env.RESEND_FROM_EMAIL;
     if (!apiKey || !from) return NextResponse.json({ error: "ईमेल सेवा सेट नहीं है। Vercel में RESEND_API_KEY और RESEND_FROM_EMAIL जोड़ें।" }, { status: 503 });
