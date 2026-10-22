@@ -4,6 +4,8 @@ import { createClient as createSupabaseAdmin } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").replace(/\\/$/, "");
+
 function escapeHtml(value: unknown): string {
   return String(value ?? "").replace(/[&<>"']/g, (char) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -11,7 +13,7 @@ function escapeHtml(value: unknown): string {
 }
 
 function safeApplyUrl(value: unknown): string {
-  const fallback = "https://updated-rojgar.vercel.app/jobs";
+  const fallback = `${siteUrl}/jobs`;
   if (typeof value !== "string" || !value.trim()) return fallback;
   try {
     const parsed = new URL(value);
@@ -94,7 +96,7 @@ export async function POST(request: Request) {
         from,
         to: [p.email],
         subject: "Rojgar Sathi Alert: " + String(job.title || "").slice(0, 180),
-        html: '<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#172033"><h2>Rojgar Sathi</h2><p>नमस्ते ' + safeName + ',</p><p>आपकी चुनी हुई कैटेगरी से मेल खाता नया अपडेट:</p><h2>' + safeTitle + '</h2><p><b>विभाग:</b> ' + safeOrg + '</p><p><b>कैटेगरी:</b> ' + safeCategory + '</p><p><b>स्थान:</b> ' + safeLocation + '</p><p><b>योग्यता:</b> ' + safeQualification + '</p><p>' + details + '</p><p><a href="' + applyUrl + '">आधिकारिक विवरण / आवेदन देखें</a></p><hr/><p style="font-size:12px;color:#667085">यह ईमेल आपकी Rojgar Sathi पसंद के आधार पर भेजा गया है। ईमेल बंद करने के लिए अपनी प्रोफाइल में Email Alerts बंद करें: <a href="https://updated-rojgar.vercel.app/profile">Notification Settings</a>.</p></div>'
+        html: '<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;color:#172033"><h2>Rojgar Sathi</h2><p>नमस्ते ' + safeName + ',</p><p>आपकी चुनी हुई कैटेगरी से मेल खाता नया अपडेट:</p><h2>' + safeTitle + '</h2><p><b>विभाग:</b> ' + safeOrg + '</p><p><b>कैटेगरी:</b> ' + safeCategory + '</p><p><b>स्थान:</b> ' + safeLocation + '</p><p><b>योग्यता:</b> ' + safeQualification + '</p><p>' + details + '</p><p><a href="' + applyUrl + '">आधिकारिक विवरण / आवेदन देखें</a></p><hr/><p style="font-size:12px;color:#667085">यह ईमेल आपकी Rojgar Sathi पसंद के आधार पर भेजा गया है। ईमेल बंद करने के लिए अपनी प्रोफाइल में Email Alerts बंद करें: <a href="${siteUrl}/profile">Notification Settings</a>.</p></div>'
       };
       try {
         const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: "Bearer " + apiKey, "Content-Type": "application/json" }, body: JSON.stringify(payload) });
