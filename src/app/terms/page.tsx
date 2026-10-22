@@ -8,7 +8,7 @@ export const metadata = {
 export default function TermsPage() {
   return (
     <main className="wrap page">
-      <Link href="/" className="text-link">← होम</Link>
+      <header className="header"><div className="wrap header-inner"><Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link><Link href="/" className="text-link">← होम</Link></div></header>
       <h1 className="page-title">नियम एवं शर्तें</h1>
       <p>Rojgar Sathi पर आने और उपलब्ध जानकारी का उपयोग करने से आप नीचे दी गई शर्तों को समझने और उनका पालन करने के लिए सहमत होते हैं।</p>
 
