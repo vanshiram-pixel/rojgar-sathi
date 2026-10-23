@@ -120,7 +120,7 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
               </div>
               <div className="vacancy-mobile-actions">
                 <Link className="vacancy-mobile-action" href={`/jobs/${job.id}`}>पूरी जानकारी <ArrowUpRight size={15} /></Link>
-                {applyUrl ? <a className="vacancy-mobile-action" href={applyUrl} target="_blank" rel="noopener noreferrer">आवेदन करें ↗</a> : null}
+                {applyUrl ? <a className="vacancy-mobile-action" href={applyUrl} target="_blank" rel="noopener noreferrer">{directApplyUrl ? "आवेदन करें ↗" : "आधिकारिक लिंक ↗"}</a> : null}
               </div>
             </article>
           );
