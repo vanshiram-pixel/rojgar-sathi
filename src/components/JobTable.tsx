@@ -100,8 +100,8 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
       <div className="vacancy-mobile-list" aria-label={label}>
         {jobs.map((job, index) => {
           const directApplyUrl = safeExternalUrl(job.apply_url);
-              const referenceUrl = safeExternalUrl(job.official_url, job.notification_url);
-              const applyUrl = directApplyUrl || referenceUrl;
+          const referenceUrl = safeExternalUrl(job.official_url, job.notification_url);
+          const applyUrl = directApplyUrl || referenceUrl;
           return (
             <article className="vacancy-mobile-card" key={job.id}>
               <div className="vacancy-mobile-meta">
