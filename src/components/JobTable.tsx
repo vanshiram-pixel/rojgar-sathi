@@ -65,7 +65,9 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
           </thead>
           <tbody>
             {jobs.map((job, index) => {
-              const applyUrl = safeExternalUrl(job.apply_url, job.official_url, job.notification_url);
+              const directApplyUrl = safeExternalUrl(job.apply_url);
+              const referenceUrl = safeExternalUrl(job.official_url, job.notification_url);
+              const applyUrl = directApplyUrl || referenceUrl;
               return (
                 <tr key={job.id}>
                   <td>{index + 1}</td>
@@ -86,7 +88,7 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
                   <td>
                     <div className="vacancy-actions">
                       <Link className="vacancy-open" href={`/jobs/${job.id}`}>विवरण <ArrowUpRight size={14} /></Link>
-                      {applyUrl ? <a className="vacancy-open" href={applyUrl} target="_blank" rel="noopener noreferrer">आवेदन ↗</a> : null}
+                      {applyUrl ? <a className="vacancy-open" href={applyUrl} target="_blank" rel="noopener noreferrer">{directApplyUrl ? "आवेदन ↗" : "आधिकारिक लिंक ↗"}</a> : null}
                     </div>
                   </td>
                 </tr>
@@ -97,7 +99,9 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
       </div>
       <div className="vacancy-mobile-list" aria-label={label}>
         {jobs.map((job, index) => {
-          const applyUrl = safeExternalUrl(job.apply_url, job.official_url, job.notification_url);
+          const directApplyUrl = safeExternalUrl(job.apply_url);
+              const referenceUrl = safeExternalUrl(job.official_url, job.notification_url);
+              const applyUrl = directApplyUrl || referenceUrl;
           return (
             <article className="vacancy-mobile-card" key={job.id}>
               <div className="vacancy-mobile-meta">
