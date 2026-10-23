@@ -130,7 +130,7 @@ function SeoAdsForm() {
             </div>
             <p className="sub">सुरक्षा: यहाँ केवल Publisher/Slot ID रखें—कभी भी निजी API key या service-role key नहीं। दोनों स्लॉट खाली होने पर केवल Auto Ads का प्रयास होगा, यदि वह आपके AdSense खाते में चालू है। विज्ञापन दिखना AdSense approval, साइट स्क्रिप्ट और नीति अनुपालन पर निर्भर करता है।</p>
             {config.ads_enabled && !/^ca-pub-[0-9]+$/.test(config.adsense_client.trim()) ? <div className="notice error" role="alert">AdSense सक्षम है, लेकिन Publisher ID खाली या गलत है।</div> : null}
-            {config.ads_enabled && /^ca-pub-[0-9]+$/.test(config.adsense_client.trim()) && (!config.ad_slot_home.trim() || !config.ad_slot_job.trim()) ? <div className="notice">Auto Ads विकल्प: खाली स्लॉट वाले स्थान पर अलग Ad Unit नहीं बनेगा। यदि आपके AdSense खाते में Auto ads चालू हैं, तो साइट स्क्रिप्ट उन्हें दिखाने देगी। होमपेज/भर्ती-पेज पर निश्चित स्थानों में विज्ञापन चाहिए तो उन Ad Slot ID को भरें। विज्ञापन दिखना Google की समीक्षा और नीति-अनुमोदन पर निर्भर है।</div> : null}
+            {config.ads_enabled && /^ca-pub-[0-9]+$/.test(config.adsense_client.trim()) && (!config.ad_slot_home.trim() || !config.ad_slot_job.trim()) ? <div className="notice">Auto Ads विकल्प: जहाँ Ad Slot ID खाली है, वहाँ निश्चित स्थान वाला Ad Unit नहीं बनेगा। यदि आपके AdSense खाते में Auto ads चालू हैं, तो साइट स्क्रिप्ट उन्हें दिखाने देगी। होमपेज/भर्ती-पेज पर निश्चित स्थानों में विज्ञापन चाहिए तो उन Ad Slot ID को भरें। विज्ञापन दिखना Google की समीक्षा और नीति-अनुमोदन पर निर्भर है।</div> : null}
           </section>
           <button className="btn" disabled={saving}>{saving ? "सेव हो रहा है…" : "SEO और विज्ञापन सेटिंग सेव करें"}</button>
         </form>
