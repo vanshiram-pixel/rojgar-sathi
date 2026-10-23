@@ -54,7 +54,7 @@ function matches(profile: any, job: any) {
     return category.includes(v) || title.includes(v);
   });
   const selectedState = String(profile.state || "").trim().toLowerCase();
-  const selectedStateSlug = selectedState.replace(/\\s+/g, "-");
+  const selectedStateSlug = selectedState.replace(/\s+/g, "-");
   const isAllIndia = !selectedState || ["all india", "all-india", "india", "भारत", "other", "अन्य"].includes(selectedState);
   // Match canonical state slugs as well as display names; location may be written in Hindi.
   const stateMatch = isAllIndia || location.includes(selectedState) || stateSlug === selectedStateSlug || stateName.includes(selectedState);
