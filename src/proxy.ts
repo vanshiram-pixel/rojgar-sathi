@@ -2,6 +2,15 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
+  const hostname = (request.headers.get("host") || "").split(":")[0].toLowerCase();
+  if (hostname === "updated-rojgar.vercel.app") {
+    const canonical = request.nextUrl.clone();
+    canonical.protocol = "https:";
+    canonical.hostname = "rojgar-sathi-main.vercel.app";
+    canonical.port = "";
+    return NextResponse.redirect(canonical, 308);
+  }
+
   const { pathname, search } = request.nextUrl;
   // OAuth/email callback must exchange its one-time code before any dashboard redirect.
   if (pathname === "/auth/callback") return NextResponse.next({ request });
