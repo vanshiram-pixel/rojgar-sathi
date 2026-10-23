@@ -29,12 +29,14 @@ function matches(profile: any, job: any) {
   const category = String(job.category || "").toLowerCase();
   const title = String(job.title || "").toLowerCase();
   const location = String(job.location || "").toLowerCase();
+  const stateSlug = String(job.state_slug || "").toLowerCase();
+  const stateName = String(job.state_name || "").toLowerCase();
   const qualification = String(job.qualification || "").toLowerCase();
-  const haystack = [category, title, String(job.organization || "").toLowerCase()].join(" ");
+  const haystack = [category, title, String(job.organization || "").toLowerCase(), String(job.department || "").toLowerCase()].join(" ");
   const categoryMatch = chosen.some((c) => {
     const v = c.toLowerCase();
     if (v === "latest jobs") return ["job", "vacancy", "recruit", "भर्ती", "नौकरी"].some((x) => haystack.includes(x));
-    if (v === "rajasthan govt jobs") return location.includes("rajasthan") && ["job", "vacancy", "recruit", "भर्ती", "नौकरी"].some((x) => haystack.includes(x));
+    if (v === "rajasthan govt jobs") return (stateSlug === "rajasthan" || stateName.includes("rajasthan") || location.includes("rajasthan") || location.includes("राजस्थान")) && ["job", "vacancy", "recruit", "भर्ती", "नौकरी"].some((x) => haystack.includes(x));
     if (v === "central government jobs") return /central|केंद्र|ssc|upsc|railway|रेलवे/.test(haystack);
     if (v === "state government jobs") return /state|राज्य|सरकार|भर्ती/.test(haystack);
     if (v === "police recruitment") return /police|पुलिस/.test(haystack);
@@ -52,9 +54,10 @@ function matches(profile: any, job: any) {
     return category.includes(v) || title.includes(v);
   });
   const selectedState = String(profile.state || "").trim().toLowerCase();
+  const selectedStateSlug = selectedState.replace(/\s+/g, "-");
   const isAllIndia = !selectedState || ["all india", "all-india", "india", "भारत", "other", "अन्य"].includes(selectedState);
-  // A generic country-wide location must not bypass a user's selected state.
-  const stateMatch = isAllIndia || location.includes(selectedState);
+  // Match canonical state slugs as well as display names; location may be written in Hindi.
+  const stateMatch = isAllIndia || location.includes(selectedState) || stateSlug === selectedStateSlug || stateName.includes(selectedState);
   const q = String(profile.qualification || "").toLowerCase();
   const qualificationMatch = !q || !qualification || qualification.includes(q) || q.includes(qualification) || /any|कोई भी/.test(q);
   return categoryMatch && stateMatch && qualificationMatch;

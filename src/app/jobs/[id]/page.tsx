@@ -39,6 +39,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 const displayDate = (value: string | null | undefined) =>
   value ? new Date(`${value.slice(0, 10)}T00:00:00`).toLocaleDateString("hi-IN", { day: "numeric", month: "long", year: "numeric" }) : "आधिकारिक अधिसूचना देखें";
 
+function toValidThrough(value?: string | null) {
+  if (!value) return undefined;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    // A date-only deadline remains valid through the full day in India.
+    return new Date(`${value}T23:59:59+05:30`).toISOString();
+  }
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
+}
+
 export default async function JobDetail({ params }: PageProps) {
   const { id } = await params;
   const supabase = await createClient();
@@ -59,7 +69,7 @@ export default async function JobDetail({ params }: PageProps) {
     hiringOrganization: { "@type": "Organization", name: job.organization },
     url: `${siteUrl}/jobs/${job.id}`,
     datePosted: job.created_at ? new Date(job.created_at).toISOString() : undefined,
-    validThrough: validThrough ? new Date(validThrough).toISOString() : undefined,
+    validThrough: toValidThrough(validThrough),
   };
   if (job.location) {
     jobPosting.jobLocation = {

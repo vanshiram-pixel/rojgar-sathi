@@ -96,3 +96,10 @@ html[data-layout="compact"] .portal-hero{padding:20px}html[data-layout="compact"
 .vacancy-actions{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 .vacancy-mobile-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media(max-width:420px){.vacancy-mobile-actions{grid-template-columns:1fr}}
+
+
+/* Application-window status, distinct from editorial publication status. */
+.vacancy-status--open{background:#e9fbf2;color:#126b46}
+.vacancy-status--upcoming{background:#eaf2ff;color:#1645a8}
+.vacancy-status--closed{background:#fff0f0;color:#9f1d1d}
+.vacancy-status--published{background:#f2f4f7;color:#344054}
