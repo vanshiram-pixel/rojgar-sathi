@@ -41,7 +41,7 @@ const displayDate = (value: string | null | undefined) =>
 
 function toValidThrough(value?: string | null) {
   if (!value) return undefined;
-  if (/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     // A date-only deadline remains valid through the full day in India.
     return new Date(`${value}T23:59:59+05:30`).toISOString();
   }
