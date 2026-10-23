@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPublishedJobs } from "@/lib/data";
-import { JobCard } from "@/components/JobCard";
+import { JobTable } from "@/components/JobTable";
 
 const builtIn: Record<string, string> = {
   "admit-card": "एडमिट कार्ड",
@@ -193,7 +193,7 @@ export default async function Category({ params }: { params: Promise<{ slug: str
         {jobs.length ? (
           <section className="section">
             <h2>संबंधित भर्ती</h2>
-            <div className="job-grid">{jobs.map((job: any) => <JobCard key={job.id} job={job} />)}</div>
+            <JobTable jobs={jobs} label={`${title} की भर्तियाँ`} />
           </section>
         ) : null}
         {!contentItems.length && !jobs.length ? (

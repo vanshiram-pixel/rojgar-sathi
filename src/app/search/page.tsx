@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { JobCard } from "@/components/JobCard";
+import { JobTable } from "@/components/JobTable";
 
 export const revalidate = 60;
 
@@ -46,7 +46,7 @@ export default async function UnifiedSearch({ searchParams }: { searchParams: Pr
 
         <section className="section">
           <div className="section-head"><h2>नौकरियाँ ({jobs.length})</h2><Link className="text-link" href="/jobs">सभी नौकरियाँ →</Link></div>
-          {jobs.length ? <div className="job-grid">{jobs.map((job) => <JobCard key={job.id} job={job} />)}</div> : <div className="empty">इस खोज में कोई प्रकाशित नौकरी नहीं मिली।</div>}
+          {jobs.length ? <JobTable jobs={jobs} label="खोज परिणाम की भर्तियाँ" /> : <div className="empty">इस खोज में कोई प्रकाशित नौकरी नहीं मिली।</div>}
         </section>
 
         <section className="section">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { JobCard } from "@/components/JobCard";
+import { JobTable } from "@/components/JobTable";
 
 export const revalidate = 60;
 
@@ -30,7 +30,7 @@ export default async function StateJobsPage({ params }: { params: Promise<{ slug
       <p className="sub">{state.description || `${state.name} की सरकारी भर्ती, एडमिट कार्ड, परिणाम और परीक्षा अपडेट।`}</p>
       <div className="notice">यहाँ वही भर्ती दिखाई जाएगी जिसकी लोकेशन में “{state.name}” दर्ज है। सही तारीख और पात्रता के लिए आधिकारिक नोटिफिकेशन जाँचें।</div>
       <section className="section"><h2>नौकरियाँ और भर्ती</h2>
-      {jobs.length ? <div className="job-grid">{jobs.map((job: any) => <JobCard key={job.id} job={job} />)}</div> : <div className="empty">इस राज्य के लिए अभी कोई प्रकाशित भर्ती नहीं मिली।</div>}</section>
+      {jobs.length ? <JobTable jobs={jobs} label={`${state.name} की सरकारी भर्तियाँ`} /> : <div className="empty">इस राज्य के लिए अभी कोई प्रकाशित भर्ती नहीं मिली।</div>}</section>
       <section className="section"><h2>एडमिट कार्ड, रिजल्ट, छात्रवृत्ति, योजनाएँ और अन्य अपडेट</h2>
       {contentItems.length ? <div className="job-grid">{contentItems.map((item: any) => <article className="job-card" key={item.id}>
         {item.image_url ? <img src={item.image_url} alt={item.title} style={{ width: "100%", maxHeight: 180, objectFit: "cover", borderRadius: 10 }} /> : null}
