@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Search, BriefcaseBusiness, GraduationCap, Trophy, ArrowUpRight, ShieldCheck, ClipboardList, BookOpenCheck, Landmark, TrainFront, Stethoscope, GraduationCap as TeacherIcon, Shield, Building2 } from "lucide-react";
 import { getPublishedJobs, getSettings } from "@/lib/data";
-import { JobCard } from "@/components/JobCard";
+import { JobTable } from "@/components/JobTable";
 import { AdSlot } from "@/components/AdSlot";
 import { createClient } from "@/lib/supabase/server";
 
@@ -91,7 +91,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
       </div></section>
       <div className="wrap portal-ad"><AdSlot enabled={settings.ads_enabled} client={settings.adsense_client} slot={settings.ad_slot_home}/></div>
       <section className="section portal-section"><div className="wrap"><div className="section-head"><div><h2>{q ? `“${q}” के खोज परिणाम` : "लेटेस्ट सरकारी भर्तियाँ"}</h2><div className="sub">पद, संस्था, योग्यता और आवेदन की समय-सीमा के आधार पर अवसर खोजें।</div></div><Link className="text-link" href="/jobs">सभी भर्तियाँ →</Link></div>
-        {jobs.length ? <div className="job-grid">{jobs.slice(0, 6).map((job: any) => <JobCard key={job.id} job={job}/>)}</div> : <div className="empty"><BriefcaseBusiness size={30} style={{ margin: "0 auto 12px" }}/><strong className="empty-title">अभी कोई प्रकाशित भर्ती उपलब्ध नहीं है</strong><span>प्रकाशित भर्तियाँ उपलब्ध होने पर यहाँ दिखाई देंगी।</span></div>}
+        {jobs.length ? <JobTable jobs={jobs.slice(0, 10)} label="होमपेज की लेटेस्ट भर्तियाँ" /> : <div className="empty"><BriefcaseBusiness size={30} style={{ margin: "0 auto 12px" }}/><strong className="empty-title">अभी कोई प्रकाशित भर्ती उपलब्ध नहीं है</strong><span>प्रकाशित भर्तियाँ उपलब्ध होने पर यहाँ दिखाई देंगी।</span></div>}
       </div></section>
       <section className="section portal-section portal-categories"><div className="wrap"><div className="section-head"><div><h2>विभाग के अनुसार भर्ती</h2><div className="sub">अपनी रुचि के विभाग को चुनें। प्रत्येक विभाग के पेज पर उसी से जुड़ी भर्तियाँ और अपडेट होने चाहिए।</div></div><Link className="text-link" href="/categories">सभी विभाग →</Link></div>
         <div className="department-grid">{departmentLinks.map((item: any) => { const Icon = item.icon; return <Link className="department-card" href={item.href} key={item.href}><span className="department-icon"><Icon size={20}/></span><span className="department-copy"><strong>{item.hindi || item.title}</strong><small>{item.detail}</small></span><ArrowUpRight size={16}/></Link>; })}</div>
