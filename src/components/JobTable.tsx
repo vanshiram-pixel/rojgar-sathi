@@ -27,6 +27,33 @@ function formatDate(value?: string | null) {
     : date.toLocaleDateString("hi-IN", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function getApplicationState(job: Job) {
+  if (job.status !== "published") {
+    return { label: job.status || "उपलब्ध", className: "vacancy-status--published" };
+  }
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const part = (type: string) => parts.find((item) => item.type === type)?.value || "";
+  const today = `${part("year")}-${part("month")}-${part("day")}`;
+  const start = job.application_start?.slice(0, 10) || "";
+  const end = job.application_end?.slice(0, 10) || "";
+
+  if (end && end < today) {
+    return { label: "समय-सीमा समाप्त", className: "vacancy-status--closed" };
+  }
+  if (start && start > today) {
+    return { label: "जल्द शुरू", className: "vacancy-status--upcoming" };
+  }
+  if (start || end) {
+    return { label: "आवेदन जारी", className: "vacancy-status--open" };
+  }
+  return { label: "प्रकाशित", className: "vacancy-status--published" };
+}
+
 function safeExternalUrl(...values: (string | null | undefined)[]) {
   for (const value of values) {
     if (!value) continue;
@@ -68,6 +95,7 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
               const directApplyUrl = safeExternalUrl(job.apply_url);
               const referenceUrl = safeExternalUrl(job.official_url, job.notification_url);
               const applyUrl = directApplyUrl || referenceUrl;
+              const applicationState = getApplicationState(job);
               return (
                 <tr key={job.id}>
                   <td>{index + 1}</td>
@@ -84,7 +112,7 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
                   <td>{job.qualification || "अधिसूचना देखें"}</td>
                   <td><span className="vacancy-date"><CalendarDays size={14} />{formatDate(job.application_start)}</span></td>
                   <td><span className="vacancy-date"><CalendarDays size={14} />{formatDate(job.application_end)}</span></td>
-                  <td><span className="vacancy-status">{job.status === "published" ? "प्रकाशित" : job.status || "उपलब्ध"}</span></td>
+                  <td><span className={`vacancy-status ${applicationState.className}`}>{applicationState.label}</span></td>
                   <td>
                     <div className="vacancy-actions">
                       <Link className="vacancy-open" href={`/jobs/${job.id}`}>विवरण <ArrowUpRight size={14} /></Link>
@@ -102,10 +130,12 @@ export function JobTable({ jobs, label = "लेटेस्ट सरकार�
           const directApplyUrl = safeExternalUrl(job.apply_url);
           const referenceUrl = safeExternalUrl(job.official_url, job.notification_url);
           const applyUrl = directApplyUrl || referenceUrl;
+          const applicationState = getApplicationState(job);
           return (
             <article className="vacancy-mobile-card" key={job.id}>
               <div className="vacancy-mobile-meta">
                 <span>#{index + 1} · {job.category || "सरकारी नौकरी"}</span>
+                <span className={`vacancy-status ${applicationState.className}`}>{applicationState.label}</span>
                 {job.featured ? <span className="vacancy-featured">★ प्रमुख</span> : null}
               </div>
               <h3><Link href={`/jobs/${job.id}`}>{job.title}</Link></h3>
