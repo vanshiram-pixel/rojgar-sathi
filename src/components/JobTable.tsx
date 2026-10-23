@@ -12,6 +12,7 @@ type Job = {
   qualification?: string | null;
   application_start?: string | null;
   application_end?: string | null;
+  valid_through?: string | null;
   featured?: boolean | null;
   status?: string | null;
   apply_url?: string | null;
@@ -40,7 +41,7 @@ function getApplicationState(job: Job) {
   const part = (type: string) => parts.find((item) => item.type === type)?.value || "";
   const today = `${part("year")}-${part("month")}-${part("day")}`;
   const start = job.application_start?.slice(0, 10) || "";
-  const end = job.application_end?.slice(0, 10) || "";
+  const end = job.application_end?.slice(0, 10) || job.valid_through?.slice(0, 10) || "";
 
   if (end && end < today) {
     return { label: "समय-सीमा समाप्त", className: "vacancy-status--closed" };
