@@ -42,7 +42,7 @@
 - मुख्य प्रोडक्शन कमिट: `578b8f30f7ead3711faedd0b770a7a2427896c21`.
 - पहले से मर्ज किए गए सुधार: सभी सार्वजनिक भर्ती सूचियों में साझा टेबल/कार्ड दृश्य, तारीख के आधार पर आवेदन स्थिति, India end-of-day JobPosting deadline, श्रेणी टैग/RLS सफ़ाई, legacy-domain redirect।
 - Supabase में सक्रिय श्रेणियाँ मौजूद हैं: 16 department, 37 state, 8 qualification श्रेणियाँ (अन्य श्रेणियाँ भी हैं)।
-- नवीनतम खोज सुधार PR #15 में है, अभी `main` में मर्ज नहीं: विभाग/राज्य/योग्यता/भर्ती प्रकार/स्थिति/तिथि के शेयर करने योग्य फ़िल्टर और responsive UI। Review में मिली qualification label, संविदा stored value, deadline priority और undated-job status की समस्याओं के लिए सुधार भी जोड़े गए हैं; नवीनतम CI परिणाम की पुष्टि बाकी है।
+- नवीनतम खोज सुधार PR #15 में है, अभी `main` में मर्ज नहीं: विभाग/राज्य/योग्यता/भर्ती प्रकार/स्थिति/तिथि के शेयर करने योग्य फ़िल्टर और responsive UI। Review में मिली qualification label, संविदा stored value, deadline priority और undated-job status की समस्याओं के लिए सुधार भी जोड़े गए हैं। इन कोड बदलावों के बाद GitHub Actions में TypeScript, lint, dependency audit और production build सफल रहे।
 - PR #15 में अब release-readiness GitHub Actions workflow है: TypeScript, lint, production dependency audit और production build; यह PR और main push पर चलता है।
 - शाखा पर `npm run typecheck`, `npm run lint`, `npm audit --omit=dev` और `npm run build` पास हुए। Lint में कुछ पुराने admin `<img>` प्रदर्शन warnings हैं; वे compile errors नहीं हैं।
 - `npm audit --omit=dev`: 0 vulnerabilities।
