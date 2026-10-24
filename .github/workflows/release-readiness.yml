@@ -4,7 +4,8 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [release/production-readiness]
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,6 +17,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -26,10 +28,10 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: TypeScript check
-        run: npx tsc --noEmit
+        run: npm run typecheck
       - name: Lint
         run: npm run lint
-      - name: Production build
-        run: npm run build
       - name: Production dependency security audit
         run: npm audit --omit=dev
+      - name: Production build
+        run: npm run build
