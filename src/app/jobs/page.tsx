@@ -30,6 +30,7 @@ function indiaToday(): string {
   }).format(new Date());
 }
 
+// Keep filter semantics aligned with JobTable and the values persisted by JobsAdmin.
 function deadlineOf(job: any): string {
   // Application deadline is authoritative; validity is only a fallback for older records.
   return String(job.application_end || job.valid_through || "");
