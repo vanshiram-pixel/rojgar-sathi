@@ -31,13 +31,15 @@ function indiaToday(): string {
 }
 
 function deadlineOf(job: any): string {
-  return String(job.valid_through || job.application_end || "");
+  // Application deadline is authoritative; validity is only a fallback for older records.
+  return String(job.application_end || job.valid_through || "");
 }
 
-function applicationStatus(job: any, today: string): "upcoming" | "open" | "closing-soon" | "expired" {
+function applicationStatus(job: any, today: string): "upcoming" | "open" | "closing-soon" | "expired" | "published" {
   const start = String(job.application_start || "");
   const deadline = deadlineOf(job);
   if (start && start > today) return "upcoming";
+  if (!start && !deadline) return "published";
   if (deadline && deadline < today) return "expired";
   if (deadline) {
     const daysRemaining = Math.floor(
@@ -106,7 +108,9 @@ export default async function Jobs({ searchParams }: { searchParams: Promise<Sea
   const categories = (categoryResult.data || []) as PortalCategory[];
   const departments = categories.filter((item) => item.category_type === "department");
   const states = categories.filter((item) => item.category_type === "state");
-  const qualifications = categories.filter((item) => item.category_type === "qualification");
+  // Qualification is stored as free text by JobsAdmin, so use values that match the stored text,
+  // rather than category labels such as "12th Pass Jobs" that will not match "12वीं पास".
+  const qualificationOptions = ["8वीं पास", "10वीं पास", "12वीं पास", "ITI", "डिप्लोमा", "स्नातक", "स्नातकोत्तर", "B.Tech", "B.Ed", "नर्सिंग"];
   const allJobs = jobsResult.data || [];
   const jobs = allJobs.filter((job: any) => {
     const currentStatus = applicationStatus(job, today);
@@ -161,14 +165,19 @@ export default async function Jobs({ searchParams }: { searchParams: Promise<Sea
             <label>योग्यता
               <select name="qualification" defaultValue={qualification}>
                 <option value="">सभी योग्यताएँ</option>
-                {qualifications.map((item) => <option key={item.slug} value={item.name}>{item.name}</option>)}
-                {!qualifications.length && ["8वीं पास", "10वीं पास", "12वीं पास", "ITI", "डिप्लोमा", "स्नातक", "स्नातकोत्तर"].map((item) => <option key={item} value={item}>{item}</option>)}
+                {qualificationOptions.map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
             </label>
             <label>भर्ती का प्रकार
               <select name="recruitmentType" defaultValue={recruitmentType}>
                 <option value="">सभी प्रकार</option>
-                {["सरकारी नौकरी", "निजी नौकरी", "अप्रेंटिसशिप", "इंटर्नशिप", "संविदा भर्ती"].map((item) => <option key={item} value={item}>{item}</option>)}
+                {[
+                  { label: "सरकारी नौकरी", value: "सरकारी नौकरी" },
+                  { label: "निजी नौकरी", value: "निजी नौकरी" },
+                  { label: "अप्रेंटिसशिप", value: "अप्रेंटिसशिप" },
+                  { label: "इंटर्नशिप", value: "इंटर्नशिप" },
+                  { label: "संविदा भर्ती", value: "संविदा" },
+                ].map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
               </select>
             </label>
             <label>आवेदन की स्थिति
@@ -178,6 +187,7 @@ export default async function Jobs({ searchParams }: { searchParams: Promise<Sea
                 <option value="closing-soon">अंतिम तिथि नज़दीक (7 दिन)</option>
                 <option value="upcoming">जल्द शुरू</option>
                 <option value="expired">समय-सीमा समाप्त</option>
+                <option value="published">तिथि निर्दिष्ट नहीं</option>
               </select>
             </label>
             <label>अंतिम तिथि — से
