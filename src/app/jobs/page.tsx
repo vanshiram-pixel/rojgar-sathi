@@ -70,7 +70,7 @@ export default async function Jobs({ searchParams }: { searchParams: Promise<Sea
   const from = params.from || "";
   const to = params.to || "";
   const today = indiaToday();
-  const safeTerm = q.replace(/[%,_.*()\\"]/g, " ").trim();
+  const safeTerm = q.replace(/[^\\p{L}\\p{N}\\s-]/gu, " ").replace(/\\s+/g, " ").trim();
 
   const supabase = await createClient();
   const [settings, categoryResult, jobsResult] = await Promise.all([
