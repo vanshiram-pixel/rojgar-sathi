@@ -42,7 +42,7 @@
 - मुख्य प्रोडक्शन कमिट: `578b8f30f7ead3711faedd0b770a7a2427896c21`.
 - पहले से मर्ज किए गए सुधार: सभी सार्वजनिक भर्ती सूचियों में साझा टेबल/कार्ड दृश्य, तारीख के आधार पर आवेदन स्थिति, India end-of-day JobPosting deadline, श्रेणी टैग/RLS सफ़ाई, legacy-domain redirect।
 - Supabase में सक्रिय श्रेणियाँ मौजूद हैं: 16 department, 37 state, 8 qualification श्रेणियाँ (अन्य श्रेणियाँ भी हैं)।
-- नवीनतम खोज सुधार PR #15 में है, अभी `main` में मर्ज नहीं: विभाग/राज्य/योग्यता/भर्ती प्रकार/स्थिति/तिथि के शेयर करने योग्य फ़िल्टर और responsive UI।
+- नवीनतम खोज सुधार PR #15 में है, अभी `main` में मर्ज नहीं: विभाग/राज्य/योग्यता/भर्ती प्रकार/स्थिति/तिथि के शेयर करने योग्य फ़िल्टर और responsive UI। Review में मिली qualification label, संविदा stored value, deadline priority और undated-job status की समस्याओं के लिए सुधार भी जोड़े गए हैं; नवीनतम CI परिणाम की पुष्टि बाकी है।
 - PR #15 में अब release-readiness GitHub Actions workflow है: TypeScript, lint, production dependency audit और production build; यह PR और main push पर चलता है।
 - शाखा पर `npm run typecheck`, `npm run lint`, `npm audit --omit=dev` और `npm run build` पास हुए। Lint में कुछ पुराने admin `<img>` प्रदर्शन warnings हैं; वे compile errors नहीं हैं।
 - `npm audit --omit=dev`: 0 vulnerabilities।
@@ -56,7 +56,7 @@
 1. **Supabase Auth:** Leaked Password Protection अभी बंद है। इसे Supabase Dashboard में चालू कराकर Security Advisor दोबारा जाँचना है।
 2. **Preview QA:** Vercel Preview में Supabase Preview env vars मौजूद नहीं हैं; Preview को सीधे production database credentials नहीं देने हैं। अलग staging project या सुरक्षित staging configuration चाहिए।
 3. **ईमेल अलर्ट:** कोड में Resend integration है, लेकिन Vercel environment variables में `RESEND_API_KEY` और `RESEND_FROM_EMAIL` अभी नहीं मिले। भेजने की end-to-end जाँच नहीं हुई।
-4. **AI सहायता:** कोड में अभी AI मॉडल प्रदाता की environment configuration नहीं है। वास्तविक AI सुविधा को provider/model/key और सुरक्षित server-side endpoint के साथ बनाकर टेस्ट करना है; नकली AI बटन नहीं जोड़ना।
+4. **AI सहायता:** PR #15 में अधिकृत एडमिन के लिए server-side AI draft endpoint और मानव-समीक्षा वाला UI जोड़ा गया है। अभी `OPENAI_API_KEY` उपलब्ध नहीं है, इसलिए provider के साथ end-to-end परीक्षण बाकी है। AI आउटपुट अपने-आप प्रकाशित नहीं होता; निर्देश तारीख/पद/पात्रता/लिंक गढ़ने से रोकते हैं और category suggestions केवल उपलब्ध श्रेणियों से चुने जाते हैं।
 5. **AdSense:** डेटाबेस में ads बंद हैं और publisher/client/slot फ़ील्ड खाली हैं। सही डोमेन/प्रकाशक स्वीकृति की पुष्टि के बाद ही चालू करना।
 6. **सामग्री:** वर्तमान डेटाबेस में केवल 2 job records और 6 content records हैं; सार्वजनिक सामग्री की मात्रा कम है। सक्रिय भर्ती/अपडेट केवल आधिकारिक नोटिस और तारीख सत्यापित करने के बाद जोड़ने हैं।
 7. **Admin end-to-end:** अलग staging वातावरण पर login, create/edit/publish/archive, image upload, categories, appearance, expiry proposals, user preferences और alert workflow का पूरा परीक्षण।
