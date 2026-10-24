@@ -97,12 +97,15 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
+      // Keep provider diagnostics in server logs only; do not echo upstream details to clients.
       const failure = await response.json().catch(() => null);
-      const providerMessage = clean(failure?.error?.message, 300);
+      console.error("AI draft provider request failed", {
+        status: response.status,
+        code: clean(failure?.error?.code, 100),
+        type: clean(failure?.error?.type, 100),
+      });
       return NextResponse.json({
-        error: providerMessage
-          ? `AI सेवा ने अनुरोध पूरा नहीं किया: ${providerMessage}`
-          : "AI सेवा अभी उपलब्ध नहीं है। API key, model और provider limits जाँचें।",
+        error: "AI सेवा अभी अनुरोध पूरा नहीं कर सकी। API key, model और provider limits जाँचें।",
       }, { status: 502 });
     }
 
