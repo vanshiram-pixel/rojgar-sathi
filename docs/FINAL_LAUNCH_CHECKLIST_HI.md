@@ -43,15 +43,18 @@
 - पहले से मर्ज किए गए सुधार: सभी सार्वजनिक भर्ती सूचियों में साझा टेबल/कार्ड दृश्य, तारीख के आधार पर आवेदन स्थिति, India end-of-day JobPosting deadline, श्रेणी टैग/RLS सफ़ाई, legacy-domain redirect।
 - Supabase में सक्रिय श्रेणियाँ मौजूद हैं: 16 department, 37 state, 8 qualification श्रेणियाँ (अन्य श्रेणियाँ भी हैं)।
 - नवीनतम खोज सुधार PR #15 में है, अभी `main` में मर्ज नहीं: विभाग/राज्य/योग्यता/भर्ती प्रकार/स्थिति/तिथि के शेयर करने योग्य फ़िल्टर और responsive UI।
-- इस शाखा पर `npx tsc --noEmit`, `npm run lint`, `npm audit --omit=dev` और `npm run build` पास हुए। Lint में कुछ पुराने admin `<img>` प्रदर्शन warnings हैं; वे compile errors नहीं हैं।
+- PR #15 में अब release-readiness GitHub Actions workflow है: TypeScript, lint, production dependency audit और production build; यह PR और main push पर चलता है।
+- शाखा पर `npm run typecheck`, `npm run lint`, `npm audit --omit=dev` और `npm run build` पास हुए। Lint में कुछ पुराने admin `<img>` प्रदर्शन warnings हैं; वे compile errors नहीं हैं।
 - `npm audit --omit=dev`: 0 vulnerabilities।
 - स्थानीय read-only परीक्षण में `/jobs` और फ़िल्टर URL ने HTTP 200 लौटाया तथा फ़िल्टर नियंत्रण/टेबल रेंडर हुए।
-- प्रोडक्शन पर पहले जाँचे गए मुख्य पेज, robots.txt और sitemap.xml HTTP 200 लौटे; हाल की runtime-error जाँच में कोई नई त्रुटि नहीं मिली।
+- प्रोडक्शन पर homepage, jobs, categories, search, legal pages, robots.txt और sitemap.xml HTTP 200 लौटे; पुराने domain का `/jobs` URL canonical Rojgar Sathi URL पर redirect हुआ।
+- Vercel Preview build READY है; preview access protection के कारण unauthenticated smoke test 302 पर रुकता है। Preview के Supabase env vars और safe staging अभी भी अलग से आवश्यक हैं।
+- अतिरिक्त branches की तुलना की गई: कई पुराने branches वर्तमान main से पीछे हैं और उनमें वर्तमान सुरक्षा/टेबल सुधार हटते हैं; उन्हें अंधाधुंध merge करना सुरक्षित नहीं है। उपयोगी बदलाव केवल review/test के बाद PR #15 में समेटें।
 
 ## लॉन्च से पहले खुले गेट
 
 1. **Supabase Auth:** Leaked Password Protection अभी बंद है। इसे Supabase Dashboard में चालू कराकर Security Advisor दोबारा जाँचना है।
-2. **Preview QA:** Vercel Preview में Supabase सार्वजनिक env vars मौजूद नहीं हैं; इसलिए Preview का `/jobs` server-render 500 देता है। सुरक्षा कारण से Preview को सीधे production database credentials नहीं देने हैं। अलग staging project या सुरक्षित staging configuration तय करनी होगी।
+2. **Preview QA:** Vercel Preview में Supabase Preview env vars मौजूद नहीं हैं; Preview को सीधे production database credentials नहीं देने हैं। अलग staging project या सुरक्षित staging configuration चाहिए।
 3. **ईमेल अलर्ट:** कोड में Resend integration है, लेकिन Vercel environment variables में `RESEND_API_KEY` और `RESEND_FROM_EMAIL` अभी नहीं मिले। भेजने की end-to-end जाँच नहीं हुई।
 4. **AI सहायता:** कोड में अभी AI मॉडल प्रदाता की environment configuration नहीं है। वास्तविक AI सुविधा को provider/model/key और सुरक्षित server-side endpoint के साथ बनाकर टेस्ट करना है; नकली AI बटन नहीं जोड़ना।
 5. **AdSense:** डेटाबेस में ads बंद हैं और publisher/client/slot फ़ील्ड खाली हैं। सही डोमेन/प्रकाशक स्वीकृति की पुष्टि के बाद ही चालू करना।
