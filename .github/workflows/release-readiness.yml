@@ -1,4 +1,5 @@
 name: Release Readiness Checks
+# Keep the release gate explicit for every final-code revision.
 
 on:
   pull_request:
