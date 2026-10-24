@@ -1,4 +1,5 @@
 name: Release Readiness Checks
+# Re-run all launch gates for the latest structured-data hardening.
 # Keep the release gate explicit for every final-code revision.
 
 on:
