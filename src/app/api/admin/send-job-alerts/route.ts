@@ -83,9 +83,14 @@ export async function POST(request: Request) {
     const from = process.env.RESEND_FROM_EMAIL;
     if (!apiKey || !from) return NextResponse.json({ error: "ईमेल सेवा सेट नहीं है। Vercel में RESEND_API_KEY और RESEND_FROM_EMAIL जोड़ें।" }, { status: 503 });
     const { data: profiles, error: profileError } = await adminDb.from("user_profiles").select("user_id,email,full_name,state,qualification,categories,alert_frequency,email_alerts").eq("email_alerts", true);
-    if (profileError) return NextResponse.json({ error: "यूज़र की पसंद पढ़ने में त्रुटि: " + profileError.message }, { status: 500 });
-    const recipients = (profiles || []).filter((p: any) => p.email && matches(p, job));
-    let sent = 0, failed = 0, skipped = 0;
+    if (profileError) {
+      console.error("Job alert profile lookup failed", profileError);
+      return NextResponse.json({ error: "यूज़र की पसंद पढ़ने में त्रुटि। कृपया बाद में फिर प्रयास करें।" }, { status: 500 });
+    }
+    const matchedRecipients = (profiles || []).filter((p: any) => p.email && matches(p, job));
+    // Prevent one admin request from unexpectedly triggering an unbounded email send.
+    const recipients = matchedRecipients.slice(0, 100);
+    let sent = 0, failed = 0, skipped = matchedRecipients.length - recipients.length;
     for (const p of recipients) {
       const { data: existing } = await adminDb.from("user_alert_log").select("id").eq("user_id", p.user_id).eq("job_id", job.id).eq("channel", "email").maybeSingle();
       if (existing) { skipped++; continue; }
@@ -110,8 +115,19 @@ export async function POST(request: Request) {
         if (logError) failed++; else sent++;
       } catch { failed++; }
     }
-    return NextResponse.json({ ok: true, matched: recipients.length, sent, skipped, failed, message: "मेल मिलान पूरा हुआ।" });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "नोटिफिकेशन भेजने में त्रुटि।" }, { status: 500 });
+    return NextResponse.json({
+      ok: true,
+      matched: matchedRecipients.length,
+      processed: recipients.length,
+      sent,
+      skipped,
+      failed,
+      message: matchedRecipients.length > recipients.length
+        ? "पहले 100 मिलान वाले यूज़र्स प्रोसेस किए गए; बाकी के लिए अगला बैच चलाएँ।"
+        : "मेल मिलान पूरा हुआ।",
+    });
+  } catch (e: unknown) {
+    console.error("Job alert request failed", e);
+    return NextResponse.json({ error: "नोटिफिकेशन भेजने में त्रुटि। कृपया बाद में फिर प्रयास करें।" }, { status: 500 });
   }
 }

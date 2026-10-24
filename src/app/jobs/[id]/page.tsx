@@ -59,12 +59,14 @@ export default async function JobDetail({ params }: PageProps) {
   if (!job) notFound();
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://rojgar-sathi-main.vercel.app").replace(/\/$/, "");
-  const validThrough = job.valid_through || job.application_end || undefined;
+  // Prefer the actual application deadline. Never emit guessed or placeholder JobPosting data.
+  const validThrough = job.application_end || job.valid_through || undefined;
+  const canEmitJobPosting = Boolean(job.title?.trim() && job.organization?.trim() && job.description?.trim() && job.created_at && job.location?.trim());
   const jobPosting: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: job.title,
-    description: job.description || `${job.title} – विस्तृत जानकारी और पात्रता के लिए आधिकारिक अधिसूचना देखें।`,
+    description: job.description,
     identifier: { "@type": "PropertyValue", name: job.organization, value: String(job.id) },
     hiringOrganization: { "@type": "Organization", name: job.organization },
     url: `${siteUrl}/jobs/${job.id}`,
@@ -98,7 +100,7 @@ export default async function JobDetail({ params }: PageProps) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJobPosting }} />
+      {canEmitJobPosting ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJobPosting }} /> : null}
       <header className="header">
         <div className="wrap header-inner">
           <Link className="brand" href="/" aria-label="Rojgar Sathi home"><img className="brand-logo" src="/rojgar-sathi-logo.svg" alt="Rojgar Sathi" /></Link>

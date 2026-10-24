@@ -103,3 +103,16 @@ html[data-layout="compact"] .portal-hero{padding:20px}html[data-layout="compact"
 .vacancy-status--upcoming{background:#eaf2ff;color:#1645a8}
 .vacancy-status--closed{background:#fff0f0;color:#9f1d1d}
 .vacancy-status--published{background:#f2f4f7;color:#344054}
+
+
+/* Multi-facet recruitment search: responsive, URL-shareable filters. */
+.job-filter-panel{display:grid;gap:16px;padding:18px;margin:18px 0 20px;background:var(--surface,#fff);border:1px solid var(--border,#e4e7ec);border-radius:18px;box-shadow:0 6px 22px rgba(16,24,40,.045)}
+.job-filter-search{display:grid;gap:7px}
+.job-filter-panel label{display:grid;gap:7px;color:var(--text,#101828);font-size:13px;font-weight:700;min-width:0}
+.job-filter-panel input,.job-filter-panel select{width:100%;min-width:0;min-height:43px;padding:10px 12px;border:1px solid var(--border,#d0d5dd);border-radius:10px;background:var(--background,#fff);color:var(--text,#101828);font:inherit;font-size:14px}
+.job-filter-panel input:focus,.job-filter-panel select:focus{outline:3px solid rgba(21,94,239,.16);border-color:#155eef}
+.job-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.job-filter-actions{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
+.job-filter-actions .sub{margin-left:auto;font-size:12px}
+@media(max-width:900px){.job-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.job-filter-panel{padding:13px;border-radius:14px}.job-filter-grid{grid-template-columns:1fr}.job-filter-actions{align-items:stretch;flex-direction:column;gap:10px}.job-filter-actions .sub{margin-left:0}.job-filter-actions .btn{width:100%;text-align:center}}
